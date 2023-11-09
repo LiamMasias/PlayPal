@@ -49,5 +49,35 @@ app.get('/welcome', (req, res) => {
     res.json({status: 'success', message: 'Welcome!'});
   });
 
+app.post('/login', async (req, res) => {
+  // To-DO: Retrieve username and hashed password from the 'users' table
+  // const select = "SELECT * FROM users WHERE username = $1";
+  // db.one(select, [req.body.username])
+  //   .then(async (user) => {
+  //     // To-DO: Compare the password with the hashed password
+  //     const match = await bcrypt.compare(req.body.password, user.password);
+  //     if (match) {
+  //       // To-DO: Store the username in the session
+  //       req.session.user = user;
+  //       req.session.save();
+  //       res.redirect('/discover');
+  //     } else {
+  //         alert("Invalid username or password")
+  //         res.redirect('/login');
+  //     }
+  //   })
+  //   .catch(error => {
+  //     console.log(error);
+  //   });
+  const hash = await bcrypt.hash(req.body.password, 10);
+  res.status(200).json({
+    username: req.body.username,
+    password: req.body.password,
+    hashedPassword: hash
+  });
+});
+
+
+
   module.exports  = app.listen(3000);
   console.log('Server is listening on port 3000');

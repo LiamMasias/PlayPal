@@ -51,13 +51,13 @@ app.get('/welcome', (req, res) => {
 });
 ///////////////////////////////////////////////////////////////////////////////////////
 app.get('/', (req, res) => {
+
   res.render("pages/login");
   });
   
 app.get("/login", (req, res) => {
   res.render("pages/login");
 });
-
 
 app.post("/login", async (req, res) => {
   // check if password from request matches with password in DB
@@ -78,22 +78,38 @@ app.post("/login", async (req, res) => {
           if(match){
               req.session.user = username;
               req.session.save();
-              res.redirect("/discover");
+              res.redirect("/home");
           } else {
               throw new Error("User not found")
           }
           } else {
-              res.redirect("/register")
+              res.redirect("/home")
           }
       })
       .catch((err) => {
           console.log("Login Failed!!!")
-          res.render("pages/login"), {
+          res.status(200).render("pages/login"), {
               message: "Login failed, please double check your login",
           };
       });
-
 })
+
+// Route for logout
+app.get('/logout', (req, res) => {
+  // Destroy the user's session
+  req.session.destroy((err) => {
+    if(err) {
+      console.error('Error during logout:', err);
+    } 
+    
+    else {
+      console.log('Logged out Succesfully');
+    }
+    
+    // Redirect to the login page with a success message
+    res.render('pages/login', { message: 'Logged out Successfully', error: false });
+  });
+});
 
 app.get('/home', (req, res) => {
   let data = 'fields name,aggregated_rating,genres.name;\nsort aggregated_rating desc;\nwhere aggregated_rating != null & genres != null;';
@@ -114,9 +130,10 @@ app.get('/home', (req, res) => {
   axios.request(config)
   .then((response) => {
     console.log(JSON.stringify(response.data));
-    res.render("pages/home", {games: response});
+    res.sendStatus(200).message("Success").render("pages/home", {games: response});
   })
   .catch((error) => {
+    res.sendStatus(500).message("Failure");
     console.log(error);
   });
 });

@@ -22,5 +22,6 @@ services:
     volumes:
       - ./src:/home/node/app
     command: 'npm start'
+    # command: 'npm run testandrun'
 volumes:
   group-project:

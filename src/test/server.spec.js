@@ -29,4 +29,16 @@ describe('Server!', () => {
 
   // ===========================================================================
   // TO-DO: Part A Login unit test case
+
+
+  it("Positive: Returns successfully from home page route", done => {
+    chai
+    .request(server)
+    .get("/home")
+    .end((err, res) => {
+      expect(res).to.have.status(200);
+      assert.strictEqual(res.body.message, "Success");
+      done();
+    });
+  });
 });

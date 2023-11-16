@@ -53,33 +53,41 @@ app.get('/', (req, res) => {
   console.log("Hello World!");
 })
 
-app.post('/login', async (req, res) => {
-  // To-DO: Retrieve username and hashed password from the 'users' table
-  // const select = "SELECT * FROM users WHERE username = $1";
-  // db.one(select, [req.body.username])
-  //   .then(async (user) => {
-  //     // To-DO: Compare the password with the hashed password
-  //     const match = await bcrypt.compare(req.body.password, user.password);
-  //     if (match) {
-  //       // To-DO: Store the username in the session
-  //       req.session.user = user;
-  //       req.session.save();
-  //       res.redirect('/discover');
-  //     } else {
-  //         alert("Invalid username or password")
-  //         res.redirect('/login');
-  //     }
-  //   })
-  //   .catch(error => {
-  //     console.log(error);
-  //   });
-  const hash = await bcrypt.hash(req.body.password, 10);
-  res.status(200).json({
-    username: req.body.username,
-    password: req.body.password,
-    hashedPassword: hash
-  });
-});
+app.post("/login", async (req, res) => {
+  // check if password from request matches with password in DB
+  const query = "SELECT * FROM users where username = $1;";
+  const username = req.body.username;
+
+  db.any(query, [username])
+      .then(async function (data) {
+          if(data.length > 0){
+              const match = await bcrypt.compare(req.body.password, data[0].password);
+          console.log(match);
+
+          console.log(data[0])
+
+          
+          console.log("Database connection and search successful");
+          
+          if(match){
+              req.session.user = username;
+              req.session.save();
+              res.redirect("/discover");
+          } else {
+              throw new Error("User not found")
+          }
+          } else {
+              res.redirect("/register")
+          }
+      })
+      .catch((err) => {
+          console.log("Login Failed!!!")
+          res.render("pages/login"), {
+              message: "Login failed, please double check your login",
+          };
+      });
+
+})
 
 app.get('/home', (req, res) => {
   let data = 'fields *;\nlimit 10;';

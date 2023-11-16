@@ -46,8 +46,12 @@ app.use(
 
 // Test API
 app.get('/welcome', (req, res) => {
-    res.json({status: 'success', message: 'Welcome!'});
-  });
+  res.json({status: 'success', message: 'Welcome!'});
+});
+
+app.get('/', (req, res) => {
+  console.log("Hello World!");
+})
 
 app.post('/login', async (req, res) => {
   // To-DO: Retrieve username and hashed password from the 'users' table

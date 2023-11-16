@@ -83,7 +83,7 @@ app.post("/login", async (req, res) => {
       })
       .catch((err) => {
           console.log("Login Failed!!!")
-          res.status(500).render("pages/login"), {
+          res.status(200).render("pages/login"), {
               message: "Login failed, please double check your login",
           };
       });

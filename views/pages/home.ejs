@@ -13,8 +13,8 @@
             <% games.forEach(game => { %>
                 <td>game.name</td>
                 <td>game.aggregated_rating</td>
-                <td><% game.genres.forEach(genre => {
-                    genre.name;
+                <td><% game.genres.forEach(genre => { %>
+                    <%= `${genre.name}, `%>
                 <% }); %>
                 </td>
             <% }); %>

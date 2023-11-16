@@ -1,4 +1,5 @@
-CREATE TABLE users IF NOT EXISTS(
+DROP TABLE IF EXISTS users CASCADE;
+CREATE TABLE users(
     userId SERIAL PRIMARY KEY,
     email VARCHAR(50) NOT NULL,
     username VARCHAR(50) NOT NULL,
@@ -8,4 +9,3 @@ CREATE TABLE users IF NOT EXISTS(
 );
 
 -- for ratings, will need, username, rating, foreign key to game ID
-

@@ -47,11 +47,12 @@ app.use(
 // Test API
 app.get('/welcome', (req, res) => {
   res.json({status: 'success', message: 'Welcome!'});
+
 });
 
 app.get('/', (req, res) => {
   console.log("Hello World!");
-})
+});
 
 app.post("/login", async (req, res) => {
   // check if password from request matches with password in DB
@@ -124,9 +125,10 @@ app.get('/home', (req, res) => {
   axios.request(config)
   .then((response) => {
     console.log(JSON.stringify(response.data));
-    res.render("pages/home", {games: response});
+    res.sendStatus(200).message("Success").render("pages/home", {games: response});
   })
   .catch((error) => {
+    res.sendStatus(500).message("Failure");
     console.log(error);
   });
 });

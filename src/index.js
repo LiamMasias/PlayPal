@@ -124,7 +124,7 @@ app.post("/login", async (req, res) => {
 })
 
 app.get('/home', (req, res) => {
-  let data = 'fields *;\nlimit 10;';
+  let data = 'fields name,aggregated_rating,genres.name;\nsort aggregated_rating desc;\nwhere aggregated_rating != null & genres != null;';
 
   let config = {
     method: 'post',
@@ -147,6 +147,10 @@ app.get('/home', (req, res) => {
   .catch((error) => {
     console.log(error);
   });
+});
+
+app.post("/upload-img", (req, res) => {
+  // const data = 
 });
 
   module.exports  = app.listen(3000);

@@ -1,0 +1,30 @@
+<%- include ('../partials/head') %> <%- include ('../partials/menu') %>
+
+<main>
+  <div class="container">
+    <h1>Discover</h1>
+    <div>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Rating</th>
+          <th>Genres</th>
+        </tr>
+        <% games.forEach(game => { %>
+          <tr>
+            <td><%= game.name %></td>
+            <td><%= game.aggregated_rating %></td>
+            <td>
+              <% game.genres.forEach((genre, index) => { %>
+                <%= `${genre.name}${index < game.genres.length - 1 ? ',' : ''} ` %>
+              <% }); %>
+            </td>
+          </tr>
+        <% }); %>
+      </table>
+      
+  </div>
+  
+</main>
+
+<%- include ('../partials/footer') %>

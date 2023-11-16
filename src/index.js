@@ -81,7 +81,31 @@ app.post('/login', async (req, res) => {
   });
 });
 
+app.get('/home', (req, res) => {
+  let data = 'fields *;\nlimit 10;';
 
+  let config = {
+    method: 'post',
+    maxBodyLength: Infinity,
+    url: 'https://api.igdb.com/v4/games',
+    headers: { 
+      'Client-ID': process.env.TWITCH_CID, 
+      'Authorization': 'Bearer '+ process.env.ACCESS_TOKEN, 
+      'Content-Type': 'text/plain', 
+      'Cookie': '__cf_bm=8QJ8jiONy6Mtn0esNjAq1dWDKMpRoJSuFwD.GELBeBY-1699991247-0-AVsH85k1GHSbc/QyMLxL41NsnyPCcMewbUmoqYU27SEklnJ+yZp3DmsAJWgoIQf4n8xdepIl4htcY4I65HSmaZQ='
+    },
+    data : data
+  };
+
+  axios.request(config)
+  .then((response) => {
+    console.log(JSON.stringify(response.data));
+    res.render("pages/home", {games: response});
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+});
 
   module.exports  = app.listen(3000);
   console.log('Server is listening on port 3000');

@@ -49,9 +49,14 @@ app.get('/welcome', (req, res) => {
   res.json({status: 'success', message: 'Welcome!'});
 
 });
-
+///////////////////////////////////////////////////////////////////////////////////////
 app.get('/', (req, res) => {
-  console.log("Hello World!");
+
+  res.render("pages/login");
+  });
+  
+app.get("/login", (req, res) => {
+  res.render("pages/login");
 });
 
 app.post("/login", async (req, res) => {

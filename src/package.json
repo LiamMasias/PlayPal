@@ -1,5 +1,7 @@
 {
     "name": "project-3308",
+    "version": "1.0.0",
+    "description": "DESC GOES HERE",
     "main": "index.js",
     "dependencies": {
       "ejs": "^3.1.8",

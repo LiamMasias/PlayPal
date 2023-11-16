@@ -1,5 +1,5 @@
 // Imports the index.js file to be tested.
-const server = require('../index'); //TO-DO Make sure the path to your index.js is correctly added
+const server = require('../index');
 // Importing libraries
 
 // Chai HTTP provides an interface for live integration testing of the API's.
@@ -8,6 +8,10 @@ const chaiHttp = require('chai-http');
 chai.should();
 chai.use(chaiHttp);
 const {assert, expect} = chai;
+
+// 
+const assert = require('chai').assert;
+const app = require('../index');
 
 describe('Server!', () => {
   // Sample test case given to test / endpoint.

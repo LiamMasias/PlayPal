@@ -51,8 +51,7 @@ app.get('/welcome', (req, res) => {
 });
 ///////////////////////////////////////////////////////////////////////////////////////
 app.get('/', (req, res) => {
-
-  res.render("pages/login");
+  res.redirect("/login");
   });
   
 app.get("/login", (req, res) => {
@@ -107,7 +106,7 @@ app.get('/logout', (req, res) => {
     }
     
     // Redirect to the login page with a success message
-    res.render('pages/login', { message: 'Logged out Successfully', error: false });
+    res.render('pages/logout', { message: 'Logged out Successfully', error: false });
   });
 });
 
@@ -140,6 +139,36 @@ app.get('/home', (req, res) => {
 
 app.post("/upload-img", (req, res) => {
   // const data = 
+});
+
+// Register
+app.post('/register', async (req, res) => {
+  //hash the password using bcrypt library
+  const hash = await bcrypt.hash(req.body.password, 10); // Add this back in bcrypt.hash
+  const username = await req.body.username;
+  console.log(hash);
+  console.log(username);
+
+  const insertUsers = `INSERT INTO users(username, password) VALUES ('${username}', '${hash}');`;
+  db.any(insertUsers)
+      // If query succeeds, will send an okay status, post on the console for dev purposes
+      .then(function (data){
+          console.log("User Registration Successful")
+          res.redirect('/login');
+      })
+      // If query fails due to error in retrieving required information
+      .catch(function (err){
+          console.log("User Registration Failed, Please Try Again")
+          res.redirect('/');
+      })
+})
+
+app.get('/game', (req, res) =>{
+  res.render("/pages/game");
+});
+
+app.get('/register', (req, res) =>{
+  res.render('pages/register');
 });
 
   module.exports  = app.listen(3000);

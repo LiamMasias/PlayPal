@@ -50,6 +50,8 @@ app.get('/welcome', (req, res) => {
 
 });
 ///////////////////////////////////////////////////////////////////////////////////////
+app.get('/')
+
 app.get('/', (req, res) => {
 
   res.render("pages/login");
@@ -58,6 +60,36 @@ app.get('/', (req, res) => {
 app.get("/login", (req, res) => {
   res.render("pages/login");
 });
+
+app.get("/discover", (req, res) => {
+  let data =
+    'fields name,aggregated_rating,genres.name, screenshots.url ;\nsort aggregated_rating desc;\nwhere aggregated_rating != null & genres != null & screenshots!=null;';
+
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://api.igdb.com/v4/games",
+    headers: {
+      "Client-ID": process.env.TWITCH_CID,
+      Authorization: "Bearer " + process.env.ACCESS_TOKEN,
+      "Content-Type": "text/plain",
+      Cookie:
+        "__cf_bm=8QJ8jiONy6Mtn0esNjAq1dWDKMpRoJSuFwD.GELBeBY-1699991247-0-AVsH85k1GHSbc/QyMLxL41NsnyPCcMewbUmoqYU27SEklnJ+yZp3DmsAJWgoIQf4n8xdepIl4htcY4I65HSmaZQ=",
+    },
+    data: data,
+  };
+  axios
+    .request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      res.status(200).render("pages/discover", { games: response.data });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send("Failure");
+    });
+});
+
 
 app.post("/login", async (req, res) => {
   // check if password from request matches with password in DB

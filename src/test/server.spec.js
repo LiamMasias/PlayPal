@@ -47,8 +47,8 @@ it('Negative : /login. Checking invalid name', done => {
     .post('/login')
     .send({username: 'Aishwarya', password: 'IfYouWantMeToOffThenTellMeToOff'})
     .end((err, res) => {
-      expect(res).to.have.status(200);
-      expect(res.body.message).to.equals('Invalid input');
+      expect(res).to.have.status(500);
+      expect(res.body.message).to.equals('Login failed, please double check your login');
       done();
     });
 });

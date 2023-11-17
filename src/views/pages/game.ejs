@@ -1,0 +1,24 @@
+<%- include ('../partials/head') %> <%- include ('../partials/menu') %>
+
+<h1>Game Page</h1>
+<div>
+    <table>
+        <th>
+            <tr>
+                <td>Name</td>
+                <td>Rating</td>
+                <td>Age Rating</td>
+            </tr>
+        </th>
+            <% games.forEach(game => { %>
+                <td>game.name</td>
+                <td>game.aggregated_rating</td>
+                <td><% game.genres.forEach(genre => { %>
+                    <%= `${genre.name}, `%>
+                <% }); %>
+                </td>
+            <% }); %>
+    </table>
+</div>
+
+<%- include ('../partials/footer') %>

@@ -1,5 +1,5 @@
 <header>
-    <nav class="navbar navbar-expand-sm border-bottom">
+    <nav class="navbar navbar-expand-sm border-bottom" style="background-color: mediumseagreen;">
       <div class="container">
         <button
           class="navbar-toggler ms-auto"
@@ -14,18 +14,22 @@
         <div class="collapse navbar-collapse" id="navbar-collapse">
           <ul class="navbar-nav me-auto">
             <li class="nav-item">
-              <!-- TO-DO: For Discover, add a <a> tag with an attribute href to call the '/discover' API -->
-                <a class = "nav-link" href = "/discover">Discover</a>
+                <a class = "nav-link" href ="/discover">Discover</a>
             </li>
             <li class="nav-item">
-              <!-- TO-DO: For Discover, add a <a> tag with an attribute href to call the '/discover' API -->
-                <a class = "nav-link" href = "/game">Game</a>
+                <a class = "nav-link" href ="/game">Game</a>
             </li>
           </ul>
           <div class="nav-item me-1">
-            <!-- TO-DO: For Logout, add a <a> tag with an attribute href to call the '/logout API -->
-                <a class = "nav-link" href = "/logout">Logout</a>
+                <a class = "nav-link" href ="/logout">Logout</a>
           </div>
+          <form role="Icon">                                  <!-- Icon with link back to Home Page-->
+            <div class="d-flex" role="search">
+                <a class="navbar-brand" href="/home">
+                    <img src="../../resources/img/Logo.jpg" alt="Logo" width="40" height="40" id="Logo">
+                </a>
+            </div>
+        </form>
         </div>
       </div>
     </nav>

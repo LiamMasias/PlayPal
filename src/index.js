@@ -63,7 +63,7 @@ app.get("/login", (req, res) => {
 
 app.get("/discover", (req, res) => {
   let data =
-    'fields name,aggregated_rating,genres.name, screenshots.url ;\nsort aggregated_rating desc;\nwhere aggregated_rating != null & genres != null & screenshots!=null;';
+    'fields name,aggregated_rating,genres.name, screenshots.url, cover ;\nsort aggregated_rating desc;\nwhere aggregated_rating != null & genres != null & screenshots!=null;';
 
   let config = {
     method: "post",

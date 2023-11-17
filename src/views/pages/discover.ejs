@@ -1,34 +1,28 @@
-<%- include ('../partials/head') %> <%- include ('../partials/menu') %>
+<%- include ('../partials/head') %> 
+<%- include ('../partials/menu') %>
 
 <main>
   <div class="container">
     <h1>Discover</h1>
-    <div>
-      <table>
-        <tr>
-          <th>Name</th>
-          <th>Rating</th>
-          <th>Genres</th>
-        </tr>
-        <% games.forEach(game => { %>
-          <tr>
-            <%= console.log(game) %>
-            <td><%= game.name %></td>
-            <td><%= game.aggregated_rating %></td>
-            <td>
-              <% game.genres.forEach((genre, index) => { %>
-                <%= `${genre.name}${index < game.genres.length - 1 ? ',' : ''} ` %>
-              <% }); %>
-            </td>
-            <td>
-              <img src="<%= 'https://' + game.screenshots[0].url %>" alt="Game Screenshot">
-            </td>
-          </tr>
-        <% }); %>
-      </table>
-      
+    <div class="row">
+      <% games.forEach(game => { %>
+        <div class="col-md-3"> <!-- Use col-md-3 for 4 columns on medium-sized screens -->
+          <div class="card" style="width: 18rem;">
+            <img src="<%= 'https://' + game.screenshots[0].url %>" class="card-img-top" alt="Game Screenshot">
+            <div class="card-body">
+              <h5 class="card-title"><%= game.name %></h5>
+              <p class="card-text">
+                <% game.genres.forEach((genre, index) => { %>
+                  <%= `${genre.name}${index < game.genres.length - 1 ? ',' : ''} ` %>
+                <% }); %>
+              </p>
+              <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
   </div>
-  
 </main>
 
 <%- include ('../partials/footer') %>

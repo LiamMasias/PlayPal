@@ -178,10 +178,11 @@ app.post('/register', async (req, res) => {
   //hash the password using bcrypt library
   const hash = await bcrypt.hash(req.body.password, 10); // Add this back in bcrypt.hash
   const username = await req.body.username;
-  console.log(hash);
-  console.log(username);
+  const firstName = await req.body.firstName;
+  const lastName = await req.body.lastName;
+  const email = await req.body.email;
 
-  const insertUsers = `INSERT INTO users(username, password) VALUES ('${username}', '${hash}');`;
+  const insertUsers = `INSERT INTO users (username, email, firstName, lastName, password) VALUES ('${username}', '${email}', '${firstName}', '${lastName}', '${hash}');`;
   db.any(insertUsers)
       // If query succeeds, will send an okay status, post on the console for dev purposes
       .then(function (data){

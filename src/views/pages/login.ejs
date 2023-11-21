@@ -4,9 +4,10 @@
 <main>
   <div class="container">
     <div class="center">
-        <h1>Login</h1>
-        <div class="container-fluid">
-        <form action="http://localhost:3000/login" method="POST">
+        <h1>Welcome Back!</h1>
+        <h2>Login</h2>
+        <div class="container-fluid" style="display: grid; grid-template-columns: 1fr 1fr; grid-gap: 20px;">
+        <form action="http://localhost:3000/login" method="POST" style="width: 450px; margin-right: auto; margin-left: 0;">
             <div class="form-group">
               <label for="username">Username</label>
               <input type="text" class="form-control" id="username" name="username" aria-describedby="usernameHelp" placeholder="Enter username">
@@ -20,6 +21,22 @@
                 <p>Don't have an accont? <a class="link" href="http://localhost:3000/register">Register</a> <button type="submit" class="btn btn-primary right">Login</button></p> 
             </div>
           </form>
+          <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel" style="width: 550px; margin-left: auto; margin-right: 0;">
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <!-- ../../resources/img/100-best-games-hp-b.jpg for the image path -->
+                <img class="d-block w-100" src="..." alt="First slide">
+              </div>
+              <div class="carousel-item">
+                <!-- ../../resources/img/DALLE1.png for the image path -->
+                <img class="d-block w-100" src="..." alt="Second slide">
+              </div>
+              <div class="carousel-item">
+                <!-- ../../resources/img/DALLE2.png for the image path -->
+                <img class="d-block w-100" src="..." alt="Third slide">
+              </div>
+            </div>
+          </div>
         </div>
     </div>  
   </div>

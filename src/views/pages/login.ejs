@@ -1,11 +1,12 @@
 <%- include ('../partials/head') %>
 <%- include ('../partials/loMenu') %>
 
+<!-- style="background-image: url(/img/background.jpeg);" and idea... -->
 <main>
   <div class="container">
     <div class="center">
-        <h1>Welcome Back!</h1>
-        <h2>Login</h2>
+        <h1 style="background-color: mediumseagreen; width: 300px; padding-top: 10px;">Welcome Back!</h1>
+        <h2 style="background-color: mediumseagreen; width: 80px;">Login</h2>
         <div class="container-fluid" style="display: grid; grid-template-columns: 1fr 1fr; grid-gap: 20px;">
         <form action="http://localhost:3000/login" method="POST" style="width: 450px; margin-right: auto; margin-left: 0;">
             <div class="form-group">
@@ -21,7 +22,7 @@
                 <p>Don't have an accont? <a class="link" href="http://localhost:3000/register">Register</a> <button type="submit" class="btn btn-primary right">Login</button></p> 
             </div>
           </form>
-          <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel" style="width: 550px; margin-left: auto; margin-right: 0;">
+          <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel" style="width: 650px; height: 650px; margin-left: auto; margin-right: 0;">
             <div class="carousel-inner">
               <div class="carousel-item active">
                 <!-- ../../resources/img/100-best-games-hp-b.jpg for the image path -->

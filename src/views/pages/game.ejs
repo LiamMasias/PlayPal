@@ -1,16 +1,29 @@
 <%- include ('../partials/head') %> <%- include ('../partials/menu') %>
 <main>
-    <div>
-        <div>
-            <h1>Game Page</h1>
-        </div>
-        <div>
+    <div class="center" style="background-color: rgb(73, 68, 68); width: 65%;">
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">Game Title</h5>
+              <p class="card-text">Here is where the game reviews will go.</p>
+            </div>
+            <img class="card-img-top" src="/img/Logo.jpg" alt="Card image cap">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">Cras justo odio</li>
+              <li class="list-group-item">Dapibus ac facilisis in</li>
+              <li class="list-group-item">Vestibulum at eros</li>
+            </ul>
+            <div class="card-body">
+              <a href="#" class="card-link">Card link</a>
+              <a href="#" class="card-link">Another link</a>
+            </div>
+          </div>
+        <!-- <div>
             <table>
                 <th>
                     <tr>
-                        <td>Name</td>
-                        <td>Rating</td>
-                        <td>Age Rating</td>
+                        <td class="gTT" style="text-align: left;">Year</td>
+                        <td class="gTT center">Rating</td>
+                        <td class="gTT">Age Rating</td>
                     </tr>
                 </th>
                     <!-- <%# games.forEach(game => { %>
@@ -21,8 +34,8 @@
                         <%# }); %>
                         </td>
                     <%# }); %> -->
-            </table>
-        </div>
+            <!-- </table>
+        </div> -->
     </div>
 </main>
 

@@ -6,3 +6,7 @@
   transform: translate(-50%, -50%);
   padding: 10px;
 }
+/* gameTableText */
+.gTT{
+  color: white;
+}

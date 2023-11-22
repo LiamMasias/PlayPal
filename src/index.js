@@ -146,30 +146,31 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
-  let data = 'fields name,aggregated_rating,genres.name;\nsort aggregated_rating desc;\nwhere aggregated_rating != null & genres != null;';
+  res.render('pages/game');
+  // let data = 'fields name,aggregated_rating,genres.name;\nsort aggregated_rating desc;\nwhere aggregated_rating != null & genres != null;';
 
-  let config = {
-    method: 'post',
-    maxBodyLength: Infinity,
-    url: 'https://api.igdb.com/v4/games',
-    headers: { 
-      'Client-ID': process.env.TWITCH_CID, 
-      'Authorization': 'Bearer '+ process.env.ACCESS_TOKEN, 
-      'Content-Type': 'text/plain', 
-      'Cookie': '__cf_bm=8QJ8jiONy6Mtn0esNjAq1dWDKMpRoJSuFwD.GELBeBY-1699991247-0-AVsH85k1GHSbc/QyMLxL41NsnyPCcMewbUmoqYU27SEklnJ+yZp3DmsAJWgoIQf4n8xdepIl4htcY4I65HSmaZQ='
-    },
-    data : data
-  };
+  // let config = {
+  //   method: 'post',
+  //   maxBodyLength: Infinity,
+  //   url: 'https://api.igdb.com/v4/games',
+  //   headers: { 
+  //     'Client-ID': process.env.TWITCH_CID, 
+  //     'Authorization': 'Bearer '+ process.env.ACCESS_TOKEN, 
+  //     'Content-Type': 'text/plain', 
+  //     'Cookie': '__cf_bm=8QJ8jiONy6Mtn0esNjAq1dWDKMpRoJSuFwD.GELBeBY-1699991247-0-AVsH85k1GHSbc/QyMLxL41NsnyPCcMewbUmoqYU27SEklnJ+yZp3DmsAJWgoIQf4n8xdepIl4htcY4I65HSmaZQ='
+  //   },
+  //   data : data
+  // };
 
-  axios.request(config)
-  .then((response) => {
-    console.log(JSON.stringify(response.data));
-    res.sendStatus(200).message("Success").render("pages/home", {games: response});
-  })
-  .catch((error) => {
-    res.sendStatus(500).message("Failure");
-    console.log(error);
-  });
+  // axios.request(config)
+  // .then((response) => {
+  //   console.log(JSON.stringify(response.data));
+  //   res.sendStatus(200).message("Success").render("pages/home", {games: response});
+  // })
+  // .catch((error) => {
+  //   res.sendStatus(500).message("Failure");
+  //   console.log(error);
+  // });
 });
 
 app.post("/upload-img", (req, res) => {

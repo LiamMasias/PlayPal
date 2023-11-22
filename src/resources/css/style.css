@@ -10,3 +10,13 @@
 .gTT{
   color: white;
 }
+
+.navigationItem{
+  border-radius: 25%;
+  width: 80px;
+  height: 40px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center; /* Align horizontal */
+  align-items: center; /* Align vertical */
+}

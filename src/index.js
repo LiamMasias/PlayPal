@@ -128,6 +128,16 @@ app.post("/login", async (req, res) => {
       });
 })
 
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect("/register");
+  }
+  next();
+};
+
+// Authentication Required
+app.use(auth);
+
 // Route for logout
 app.get('/logout', (req, res) => {
   // Destroy the user's session
@@ -200,12 +210,12 @@ app.post('/register', async (req, res) => {
       })
 })
 
-app.get('/game', (req, res) =>{
-  res.render("/pages/game");
-});
-
 app.get('/register', (req, res) =>{
   res.render('pages/register');
+});
+
+app.get('/game', (req, res) =>{
+  res.render('pages/game');
 });
 
   module.exports  = app.listen(3000);

@@ -135,8 +135,8 @@ const auth = (req, res, next) => {
   next();
 };
 
-// Authentication Required
-app.use(auth);
+// // Authentication Required
+// app.use(auth);
 
 // Route for logout
 app.get('/logout', (req, res) => {

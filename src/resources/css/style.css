@@ -20,3 +20,13 @@
   justify-content: center; /* Align horizontal */
   align-items: center; /* Align vertical */
 }
+
+.backFooter{
+  background-color: red;
+  border: deeppink;
+  margin-top: 50px;
+}
+
+.navTitle{
+  text-shadow: -1px 1px 2px #fffdfd, 1px 1px 1px #fbf8f8, 1px -1px 0 #ffffff, -1px -1px 0 #fcfcfc; 
+}

@@ -221,7 +221,7 @@ app.get('/game/:gameid', (req, res) =>{
   let IGDBData;
 
   let data =
-    `fields id,name,aggregated_rating,genres.name, screenshots.url ;\nsort aggregated_rating desc;\nwhere id=${gameID};`;
+    `fields age_ratings,id,name,aggregated_rating,genres.name, screenshots.url ;\nsort aggregated_rating desc;\nwhere id=${gameID};`;
 
   let config = {
     method: "post",
@@ -257,16 +257,20 @@ app.get('/game/:gameid', (req, res) =>{
     }
     
     // make the http GET request to RedCircle API
-    axios.get('https://api.redcircleapi.com/request', { params })
-    .then(response => {
+    // axios.get('https://api.redcircleapi.com/request', { params })
+    // .then(response => {
     
-        // print the JSON response from RedCircle API
-        console.log(JSON.stringify(response.data, 0, 2));
-        targetData = JSON.stringify(response.data, 0, 2);
-      }).catch(error => {
-    // catch and print the error
-    console.log(error);
-    });
+    //     // print the JSON response from RedCircle API
+    //     console.log(JSON.stringify(response.data, 0, 2));
+    //     targetData = JSON.stringify(response.data, 0, 2);
+    //   }).catch(error => {
+    // // catch and print the error
+    // console.log(error);
+    // });
+    targetData = {
+      url: `https://www.target.com/s?searchTerm=${gameName}`,
+      name: gameName
+    };
     
   res.render('pages/game', {target: targetData, IGDB: IGDBData});
 });

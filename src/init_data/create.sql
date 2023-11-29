@@ -7,3 +7,5 @@ CREATE TABLE users(
     lastName VARCHAR(50) NOT NULL,
     password VARCHAR NOT NULL
 );
+
+-- for ratings, will need, username, rating, foreign key to game ID

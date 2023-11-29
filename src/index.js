@@ -240,6 +240,10 @@ app.get('/game/:gameid', (req, res) =>{
     .request(config)
     .then((response) => {
       console.log(JSON.stringify(response.data));
+      targetData = {
+        url: `https://www.target.com/s?searchTerm=${gameName}`,
+        name: gameName
+      };
       res.status(200).render("pages/game", {IGDB: response.data });
       // gameName = response.data[0].name;
       // IGDBData = response.data;
@@ -267,7 +271,7 @@ app.get('/game/:gameid', (req, res) =>{
     // // catch and print the error
     // console.log(error);
     // });
-  // res.render('pages/game', {IGDB: IGDBData});
+  // res.render('pages/game', {target: targetData, IGDB: IGDBData});
 });
 
   module.exports  = app.listen(3000);

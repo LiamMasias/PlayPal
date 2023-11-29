@@ -5,17 +5,18 @@
     <h1>Discover</h1>
     <div>
       <table>
-        <tr>
+        <tr style="background-color: rgb(188, 188, 188);">
           <th>Name</th>
-          <th>Rating</th>
+          <th style="padding-right: 30px; padding-left: 20px;">Rating</th>
           <th>Genres</th>
+          <th>Cover Art</th>
         </tr>
         <% games.forEach(game => { %>
-          <tr>
+          <tr style="border-bottom: groove; border-color: aqua;">
             <td>
               <a href="http://localhost:3000/game/<%= game.id %>"><%= game.name %></a>
               </td>
-            <td><%= game.aggregated_rating %></td>
+            <td style="font-weight: bold; padding-right: 30px; padding-left: 20px;"><%= game.aggregated_rating %></td>
             <td>
               <% game.genres.forEach((genre, index) => { %>
                 <%= `${genre.name}${index < game.genres.length - 1 ? ',' : ''} ` %>

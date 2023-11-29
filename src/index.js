@@ -83,7 +83,7 @@ app.get("/discover", (req, res) => {
   axios
     .request(config)
     .then((response) => {
-      console.log(JSON.stringify(response.data));
+      // console.log(JSON.stringify(response.data));
       res.status(200).render("pages/discover", { games: response.data });
     })
     .catch((error) => {

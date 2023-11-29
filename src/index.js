@@ -156,7 +156,7 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
-  res.render('pages/game');
+  res.redirect('/discover');
   // let data = 'fields name,aggregated_rating,genres.name;\nsort aggregated_rating desc;\nwhere aggregated_rating != null & genres != null;';
 
   // let config = {
@@ -216,8 +216,8 @@ app.get('/register', (req, res) =>{
 
 app.get('/game/:gameid', (req, res) =>{
   const gameID = req.params.gameid;
-  let gameName;
-  let targetData;
+  // let gameName;
+  // let targetData;
   let IGDBData;
 
   let data =
@@ -240,9 +240,9 @@ app.get('/game/:gameid', (req, res) =>{
     .request(config)
     .then((response) => {
       console.log(JSON.stringify(response.data));
-      // res.status(200).render("pages/discover", { games: response.data });
-      gameName = response.data[0].name;
-      IGDBData = response.data;
+      res.status(200).render("pages/games", {IGDB: response.data });
+      // gameName = response.data[0].name;
+      // IGDBData = response.data;
       
     })
     .catch((error) => {
@@ -250,12 +250,12 @@ app.get('/game/:gameid', (req, res) =>{
       res.status(500).send("Failure");
     });
 
-  const params = {
-    api_key: process.env.TARGET_KEY,
-      search_term: gameName,
-      type: "search"
-    }
-    
+  // const params = {
+  //   api_key: process.env.TARGET_KEY,
+  //     search_term: gameName,
+  //     type: "search"
+  //   }
+
     // make the http GET request to RedCircle API
     // axios.get('https://api.redcircleapi.com/request', { params })
     // .then(response => {
@@ -267,12 +267,7 @@ app.get('/game/:gameid', (req, res) =>{
     // // catch and print the error
     // console.log(error);
     // });
-    targetData = {
-      url: `https://www.target.com/s?searchTerm=${gameName}`,
-      name: gameName
-    };
-    
-  res.render('pages/game', {target: targetData, IGDB: IGDBData});
+  // res.render('pages/game', {IGDB: IGDBData});
 });
 
   module.exports  = app.listen(3000);

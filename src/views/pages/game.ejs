@@ -1,7 +1,8 @@
 <%- include ('../partials/head') %> <%- include ('../partials/menu') %>
 <main>
     
-    <div class="container center" style="background-color: rgb(73, 68, 68); margin: 250px; transform: translate(-69%,-45%); height: 850px;">        <div id="Game Contents Top Left" style="display: inline-block;">
+    <div class="container center" style="background-color: rgb(73, 68, 68); margin: 250px; transform: translate(-69%,-45%); height: 850px;">        
+        <div id="Game Contents Top Left" style="display: inline-block;">
             <h1 style="color: white; font-weight: bolder;"><%= IGDB[0].name %></h1>
             <h5 style="color: rgb(182, 182, 182);">Year * ESRP Rating</h5>
         </div>
@@ -18,25 +19,6 @@
               <a href="#" class="card-link">Another link</a>
             </div>
           </div>
-        <!-- <div>
-            <table>
-                <th>
-                    <tr>
-                        <td class="gTT" style="text-align: left;">Year</td>
-                        <td class="gTT center">Rating</td>
-                        <td class="gTT">Age Rating</td>
-                    </tr>
-                </th>
-                    <!-- <%# games.forEach(game => { %>
-                        <td>game.name</td>
-                        <td>game.aggregated_rating</td>
-                        <td><%# game.genres.forEach(genre => { %>
-                            <%#= `${genre.name}, `%>
-                        <%# }); %>
-                        </td>
-                    <%# }); %> -->
-            <!-- </table>
-        </div> -->
     </div>
     <div id="target-data">
         <h1><%= target.name %></h1>

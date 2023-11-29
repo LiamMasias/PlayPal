@@ -12,8 +12,9 @@
         </tr>
         <% games.forEach(game => { %>
           <tr>
-            <%= console.log(game) %>
-            <td><a href="http://localhost:3000/game/<%= game.id %>"><%= game.name %></a></td>
+            <td>
+              <a href="http://localhost:3000/game/<%= game.id %>"><%= game.name %></a>
+              </td>
             <td><%= game.aggregated_rating %></td>
             <td>
               <% game.genres.forEach((genre, index) => { %>

@@ -65,7 +65,7 @@ app.get("/login", (req, res) => {
 
 app.get("/discover", (req, res) => {
   let data =
-    'fields name,aggregated_rating,genres.name, screenshots.url ;\nsort aggregated_rating desc;\nwhere aggregated_rating != null & genres != null & screenshots!=null;';
+    'fields cover.url, id,name,aggregated_rating,genres.name, screenshots.url, storyline ;\nsort aggregated_rating desc;\nwhere cover.url != null & aggregated_rating != null & genres != null & screenshots!=null & storyline != null;';
 
   let config = {
     method: "post",
@@ -156,7 +156,7 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
-  res.render('pages/game');
+  res.redirect('/discover');
   // let data = 'fields name,aggregated_rating,genres.name;\nsort aggregated_rating desc;\nwhere aggregated_rating != null & genres != null;';
 
   // let config = {
@@ -214,8 +214,64 @@ app.get('/register', (req, res) =>{
   res.render('pages/register');
 });
 
-app.get('/game', (req, res) =>{
-  res.render('pages/game');
+app.get('/game/:gameid', (req, res) =>{
+  const gameID = req.params.gameid;
+  // let gameName;
+  // let targetData;
+  let IGDBData;
+
+  let data =
+    `fields age_ratings,cover.url,id,name,aggregated_rating,genres.name, screenshots.url,storyline,summary ;\nsort aggregated_rating desc;\nwhere id=${gameID};`;
+
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://api.igdb.com/v4/games",
+    headers: {
+      "Client-ID": process.env.TWITCH_CID,
+      Authorization: "Bearer " + process.env.ACCESS_TOKEN,
+      "Content-Type": "text/plain",
+      Cookie:
+        "__cf_bm=8QJ8jiONy6Mtn0esNjAq1dWDKMpRoJSuFwD.GELBeBY-1699991247-0-AVsH85k1GHSbc/QyMLxL41NsnyPCcMewbUmoqYU27SEklnJ+yZp3DmsAJWgoIQf4n8xdepIl4htcY4I65HSmaZQ=",
+    },
+    data: data,
+  };
+  axios
+    .request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      // targetData = {
+      //   url: `https://www.target.com/s?searchTerm=${gameName}`,
+      //   name: gameName
+      // };
+      res.status(200).render("pages/game", {IGDB: response.data });
+      // gameName = response.data[0].name;
+      // IGDBData = response.data;
+      
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send("Failure");
+    });
+
+  // const params = {
+  //   api_key: process.env.TARGET_KEY,
+  //     search_term: gameName,
+  //     type: "search"
+  //   }
+
+    // make the http GET request to RedCircle API
+    // axios.get('https://api.redcircleapi.com/request', { params })
+    // .then(response => {
+    
+    //     // print the JSON response from RedCircle API
+    //     console.log(JSON.stringify(response.data, 0, 2));
+    //     targetData = JSON.stringify(response.data, 0, 2);
+    //   }).catch(error => {
+    // // catch and print the error
+    // console.log(error);
+    // });
+  // res.render('pages/game', {target: targetData, IGDB: IGDBData});
 });
 
   module.exports  = app.listen(3000);

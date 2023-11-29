@@ -240,7 +240,7 @@ app.get('/game/:gameid', (req, res) =>{
     .request(config)
     .then((response) => {
       console.log(JSON.stringify(response.data));
-      res.status(200).render("pages/games", {IGDB: response.data });
+      res.status(200).render("pages/game", {IGDB: response.data });
       // gameName = response.data[0].name;
       // IGDBData = response.data;
       

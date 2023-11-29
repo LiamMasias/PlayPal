@@ -65,7 +65,7 @@ app.get("/login", (req, res) => {
 
 app.get("/discover", (req, res) => {
   let data =
-    'fields id,name,aggregated_rating,genres.name, screenshots.url ;\nsort aggregated_rating desc;\nwhere aggregated_rating != null & genres != null & screenshots!=null;';
+    'fields cover.url, id,name,aggregated_rating,genres.name, screenshots.url, storyline ;\nsort aggregated_rating desc;\nwhere cover.url != null & aggregated_rating != null & genres != null & screenshots!=null & storyline != null;';
 
   let config = {
     method: "post",
@@ -221,7 +221,7 @@ app.get('/game/:gameid', (req, res) =>{
   let IGDBData;
 
   let data =
-    `fields age_ratings,id,name,aggregated_rating,genres.name, screenshots.url ;\nsort aggregated_rating desc;\nwhere id=${gameID};`;
+    `fields age_ratings,cover.url,id,name,aggregated_rating,genres.name, screenshots.url,storyline,summary ;\nsort aggregated_rating desc;\nwhere id=${gameID};`;
 
   let config = {
     method: "post",
@@ -240,10 +240,10 @@ app.get('/game/:gameid', (req, res) =>{
     .request(config)
     .then((response) => {
       console.log(JSON.stringify(response.data));
-      targetData = {
-        url: `https://www.target.com/s?searchTerm=${gameName}`,
-        name: gameName
-      };
+      // targetData = {
+      //   url: `https://www.target.com/s?searchTerm=${gameName}`,
+      //   name: gameName
+      // };
       res.status(200).render("pages/game", {IGDB: response.data });
       // gameName = response.data[0].name;
       // IGDBData = response.data;

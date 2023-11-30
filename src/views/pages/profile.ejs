@@ -1,17 +1,5 @@
 <%- include ('../partials/head') %> <%- include ('../partials/menu') %>
 
-<!-- <main>
-  <div class="container">
-    <h1>Profile</h1>
-
-    <p>Username: <%= user.username %></p>
-    <p>Email: <%= user.email %></p>
-    <p>First Name: <%= user.firstname %></p>
-    <p>Last Name: <%= user.lastname %></p>
-    
-    </form>
-  </div>
-</main> -->
 <main class="container mt-5">
   <h1 class="mb-4">Profile</h1>
 
@@ -24,6 +12,21 @@
           <p class="card-text">Email: <%= user.email %></p>
           <p class="card-text">First Name: <%= user.firstname %></p>
           <p class="card-text">Last Name: <%= user.lastname %></p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Friends</h5>
+          <% if (friends && friends.length > 0) { %>
+            <ul class="list-group">
+              <% friends.forEach(friend => { %>
+                <li class="list-group-item"><%= friend.username %></li>
+              <% }); %>
+            </ul>
+          <% } else { %>
+            <p class="card-text">No friends yet.</p>
+          <% } %>
         </div>
       </div>
     </div>

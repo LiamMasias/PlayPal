@@ -17,6 +17,23 @@ const dbConfig = {
 
 const db = pgp(dbConfig);
 
+const createFriendshipsTable = `
+  CREATE TABLE IF NOT EXISTS friendships (
+    id SERIAL PRIMARY KEY,
+    user_id1 INT REFERENCES users(userId),
+    user_id2 INT REFERENCES users(userId),
+    status VARCHAR(20) DEFAULT 'pending'
+  );
+`;
+
+db.none(createFriendshipsTable)
+  .then(() => {
+    console.log('Friendships table created successfully');
+  })
+  .catch((error) => {
+    console.error('Error creating friendships table:', error.message || error);
+  });
+
 // test your database
 db.connect()
   .then(obj => {
@@ -232,12 +249,31 @@ app.get('/profile', auth, async (req, res) => {
     }
 
     // Render the profile page with user data
-    res.render('pages/profile', { user });
+    const friends = await getFriends(user.userId);
+
+    res.render('pages/profile', { user, friends });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+//helper fcn for getting friendfs
+async function getFriends(userId) {
+  try {
+    const query = `
+      SELECT users.*
+      FROM users
+      JOIN friendships ON users.userId = friendships.user_id2
+      WHERE friendships.user_id1 = $1 AND friendships.status = 'accepted';
+    `;
+    const friends = await db.any(query, [userId]);
+    return friends;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+}
 
 
   module.exports  = app.listen(3000);

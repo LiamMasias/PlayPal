@@ -1,34 +1,52 @@
-<%- include ('../partials/head') %> <%- include ('../partials/menu') %>
+<%- include ('../partials/head') %>
+<%- include ('../partials/menu') %>
 
 <main>
   <div class="container">
     <h1>Discover</h1>
-    <div>
-      <table>
-        <tr>
-          <th>Name</th>
-          <th>Rating</th>
-          <th>Genres</th>
-        </tr>
+    <div class="fixed-size-container" style="width: 100%; display: flex; overflow-x: auto; box-sizing: border-box;">
+      <div class="hide-scrollbar overflow-x-scroll" style="white-space: nowrap; display: flex;">
         <% games.forEach(game => { %>
-          <tr>
-            <%= console.log(game) %>
-            <td><%= game.name %></td>
-            <td><%= game.aggregated_rating %></td>
-            <td>
-              <% game.genres.forEach((genre, index) => { %>
-                <%= `${genre.name}${index < game.genres.length - 1 ? ',' : ''} ` %>
-              <% }); %>
-            </td>
-            <td>
-              <img src="<%= 'https://' + game.screenshots[0].url %>" alt="Game Screenshot">
-            </td>
-          </tr>
+          <div style="flex: 1; white-space: normal; margin-right: 10px;">
+            <div class="card" style="width: 18rem; display: flex; flex-direction: column; height: 100%;">
+              <img src="<%= game.cover.url %>" class="card-img-top" alt="<%= game.name %>"/>
+              <div class="card-body" style="flex: 1;">
+                <h5 class="card-title"><%= game.name %></h5>
+                <p class="card-text" style="flex: 1;">
+                  <% game.genres.forEach((genre, index) => { %> <%=
+                  `${genre.name}${index < game.genres.length - 1 ? ',' : ''} ` %>
+                  <% }); %>
+                </p>
+                <a href="http://localhost:3000/game/<%= game.id %>" class="btn btn-primary" style="position: relative;">View Game</a>
+              </div>
+            </div>
+          </div>
         <% }); %>
-      </table>
-      
-  </div>
-  
-</main>
+      </div>
+    </div>
+
+    <div id = "partition" style = "height: 60px;"></div>
+
+    <div class="container">
+      <h1>Recent </h1>
+      <div class="fixed-size-container" style="width: 100%; display: flex; overflow-x: auto; box-sizing: border-box;">
+        <div class="hide-scrollbar overflow-x-scroll" style="white-space: nowrap; display: flex;">
+          <% games.forEach(game => { %>
+            <div style="flex: 1; white-space: normal; margin-right: 10px;">
+              <div class="card" style="width: 18rem; display: flex; flex-direction: column; height: 100%;">
+                <div class="card-body" style="flex: 1;">
+                  <h5 class="card-title"><%= game.name %></h5>
+                  <p class="card-text" style="flex: 1;">
+                    <% game.genres.forEach((genre, index) => { %> <%=
+                    `${genre.name}${index < game.genres.length - 1 ? ',' : ''} ` %>
+                    <% }); %>
+                  </p>
+                  <a href="http://localhost:3000/game/<%= game.id %>" class="btn btn-primary" style="position: relative;">Go somewhere</a>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
 
 <%- include ('../partials/footer') %>

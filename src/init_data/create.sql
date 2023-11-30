@@ -9,3 +9,11 @@ CREATE TABLE users(
 );
 
 -- for ratings, will need, username, rating, foreign key to game ID
+
+--friendships table!
+CREATE TABLE friendships (
+  id SERIAL PRIMARY KEY,
+  user_id1 INT REFERENCES users(userId),
+  user_id2 INT REFERENCES users(userId),
+  status VARCHAR(20) DEFAULT 'pending' -- 'pending', 'accepted', 'rejected', etc.
+);

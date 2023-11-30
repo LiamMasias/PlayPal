@@ -3,10 +3,13 @@
     <div class="container center" style="background-color: rgb(73, 68, 68); margin: 250px; transform: translate(-69%,-15%); height: 1300px;">        
         <div id="Game Contents Top Left" style="display: inline-block;">
             <h1 style="color: white; font-weight: bolder;"><%= IGDB[0].name %></h1>
-            <h5 style="color: rgb(182, 182, 182);">Year * <%= IGDB[0].age_ratings %></h5>
+            <h5 style="color: rgb(182, 182, 182);">Content Warnings: <% IGDB[0].age_ratings[1].content_descriptions.forEach((desc, index) => { %> <%=
+                `${desc.description}`  %>
+                <% }); %> </h5>
         </div>
         <div id="Game Contents Top Right" style="display: inline-block;">
-            <h5 style="color: rgb(182, 182, 182);">Users' Ratings!</h5>
+            <div id="Game Contents Top Right" style="display: inline-block;">
+                <h5 style="color: rgb(182, 182, 182);">User Ratings! <%= IGDB[0].aggregated_rating %> </h5>
         </div>
         <div class="card center" style="width: 55rem; height: 750px; transform: translate(-50%, -43%); background-color: rgb(73, 68, 68); border: none;">
             <img class="card-img-top" style="height: 600px;" src="<%= 'https://' + IGDB[0].cover.url %>" alt="Game Screenshot">

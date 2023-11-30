@@ -65,7 +65,7 @@ app.get("/login", (req, res) => {
 
 app.get("/discover", (req, res) => {
   let data =
-    'fields cover.url, id,name,aggregated_rating,genres.name, screenshots.url, storyline ;\nsort aggregated_rating desc;\nwhere cover.url != null & aggregated_rating != null & genres != null & screenshots!=null & storyline != null;';
+  'fields cover.url, id,name,aggregated_rating,genres.name, screenshots.url, storyline ;\nsort aggregated_rating desc;\nwhere cover.url != null & aggregated_rating != null & genres != null & screenshots!=null & storyline != null & age_ratings != null;';
 
   let config = {
     method: "post",
@@ -221,7 +221,7 @@ app.get('/game/:gameid', (req, res) =>{
   let IGDBData;
 
   let data =
-    `fields age_ratings,cover.url,id,name,aggregated_rating,genres.name, screenshots.url,storyline,summary ;\nsort aggregated_rating desc;\nwhere id=${gameID};`;
+  `fields age_ratings.content_descriptions.description,cover.url,id,name,aggregated_rating,genres.name, screenshots.url,storyline,summary ;\nsort aggregated_rating desc;\nwhere id=${gameID};`;
 
   let config = {
     method: "post",

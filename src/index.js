@@ -274,5 +274,31 @@ app.get('/game/:gameid', (req, res) =>{
   // res.render('pages/game', {target: targetData, IGDB: IGDBData});
 });
 
+// Route for the reviews page
+app.get('/review/:gameid', async (req, res) => {
+  try {
+    const gameID = req.params.gameid;
+    const data = 
+    `fields age_ratings,cover.url,id,name,aggregated_rating,genres.name, screenshots.url,storyline,summary ;\nsort aggregated_rating desc;\nwhere id=${gameID};`;
+
+    const response = await axios.post('https://api.igdb.com/v4/games', data, {
+      headers: {
+        'Client-ID': process.env.TWITCH_CID,
+        Authorization: 'Bearer ' + process.env.ACCESS_TOKEN,
+        'Content-Type': 'text/plain',
+        Cookie:
+          '__cf_bm=8QJ8jiONy6Mtn0esNjAq1dWDKMpRoJSuFwD.GELBeBY-1699991247-0-AVsH85k1GHSbc/QyMLxL41NsnyPCcMewbUmoqYU27SEklnJ+yZp3DmsAJWgoIQf4n8xdepIl4htcY4I65HSmaZQ=',
+      },
+    });
+
+    const reviews = response.data;
+
+    res.render('pages/review', { reviews });
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+    res.status(500).send('Failure');
+  }
+});
+
   module.exports  = app.listen(3000);
   console.log('Server is listening on port 3000');

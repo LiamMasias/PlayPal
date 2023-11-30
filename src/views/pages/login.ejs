@@ -8,7 +8,7 @@
         <h2>Login</h2>
         <div class="container-fluid" style="display: grid; grid-template-columns: 1fr 1fr; grid-gap: 20px;">
           <div>
-            <form action="http://localhost:3000/login" method="POST" style="width: 450px; margin-right: auto; margin-left: 0; background-color: rgb(168, 164, 164); border-radius: 5%;" >
+            <form action="/login" method="POST" style="width: 450px; margin-right: auto; margin-left: 0; background-color: rgb(168, 164, 164); border-radius: 5%;" >
               <div class="form-group">
                 <label for="username" style="font-weight: bolder;">Username</label>
                 <input type="text" class="form-control" id="username" name="username" aria-describedby="usernameHelp" placeholder="Enter username">
@@ -19,7 +19,7 @@
                 <input type="password" class="form-control" id="password" name="password" placeholder="Password">
               </div>
               <div class="container" style="padding-top: 20px;">
-                  <p>Don't have an accont? <a class="link" href="http://localhost:3000/register">Register</a> <button type="submit" class="btn btn-primary right">Login</button></p> 
+                  <p>Don't have an accont? <a class="link" href="/register">Register</a> <button type="submit" class="btn btn-primary right">Login</button></p> 
               </div>
             </form>
           </div>

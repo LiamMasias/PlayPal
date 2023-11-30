@@ -250,8 +250,9 @@ app.get('/profile', auth, async (req, res) => {
 
     // Render the profile page with user data
     const friends = await getFriends(user.userId);
+    const friendRequests = await getFriendRequests(user.userId);
 
-    res.render('pages/profile', { user, friends });
+    res.render('pages/profile', { user, friends, friendRequests });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -274,6 +275,60 @@ async function getFriends(userId) {
     return [];
   }
 }
+//helper fcn for grabbing friend reqs
+async function getFriendRequests(userId) {
+  try {
+    const query = `
+      SELECT users.*
+      FROM users
+      JOIN friendships ON users.userId = friendships.user_id1
+      WHERE friendships.user_id2 = $1 AND friendships.status = 'pending';
+    `;
+    const friendRequests = await db.any(query, [userId]);
+    return friendRequests;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+}
+
+app.post('/send-friend-request', auth, async (req, res) => {
+  try {
+    // Get the current user and friend's username from the form
+    const { user } = req.session;
+    const { friendUsername } = req.body;
+
+    // Get user IDs for the current user and the friend
+    const currentUser = await db.one('SELECT userId FROM users WHERE username = $1', [user]);
+    const friend = await db.one('SELECT userId FROM users WHERE username = $1', [friendUsername]);
+
+    // Check if a friend request already exists
+    const existingRequest = await db.oneOrNone(
+      'SELECT * FROM friendships WHERE (user_id1 = $1 AND user_id2 = $2) OR (user_id1 = $2 AND user_id2 = $1)',
+      [currentUser.userId, friend.userId]
+    );
+
+    if (existingRequest) {
+      return res.status(400).json({ error: 'Friend request already sent or received.' });
+    }
+
+    // Create a new friend request
+    await db.none('INSERT INTO friendships (user_id1, user_id2, status) VALUES ($1, $2, $3)', [
+      currentUser.userId,
+      friend.userId,
+      'pending',
+    ]);
+
+    res.status(200).json({ message: 'Friend request sent successfully.' });
+    res.render('pages/profile', { user, friends, friendRequests });
+  } catch (error) {
+    console.error('Error sending friend request:', error.message || error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
 
 
   module.exports  = app.listen(3000);

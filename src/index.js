@@ -63,34 +63,7 @@ app.get("/login", (req, res) => {
   res.render("pages/login");
 });
 
-app.get("/discover", (req, res) => {
-  let data =
-    'fields name,aggregated_rating,genres.name, screenshots.url ;\nsort aggregated_rating desc;\nwhere aggregated_rating != null & genres != null & screenshots!=null;';
 
-  let config = {
-    method: "post",
-    maxBodyLength: Infinity,
-    url: "https://api.igdb.com/v4/games",
-    headers: {
-      "Client-ID": process.env.TWITCH_CID,
-      Authorization: "Bearer " + process.env.ACCESS_TOKEN,
-      "Content-Type": "text/plain",
-      Cookie:
-        "__cf_bm=8QJ8jiONy6Mtn0esNjAq1dWDKMpRoJSuFwD.GELBeBY-1699991247-0-AVsH85k1GHSbc/QyMLxL41NsnyPCcMewbUmoqYU27SEklnJ+yZp3DmsAJWgoIQf4n8xdepIl4htcY4I65HSmaZQ=",
-    },
-    data: data,
-  };
-  axios
-    .request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data));
-      res.status(200).render("pages/discover", { games: response.data });
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(500).send("Failure");
-    });
-});
 
 
 app.post("/login", async (req, res) => {
@@ -128,6 +101,32 @@ app.post("/login", async (req, res) => {
       });
 })
 
+app.get('/register', (req, res) =>{
+  res.render('pages/register');
+});
+app.post('/register', async (req, res) => {
+  //hash the password using bcrypt library
+  const hash = await bcrypt.hash(req.body.password, 10); // Add this back in bcrypt.hash
+  const username = await req.body.username;
+  const firstName = await req.body.firstName;
+  const lastName = await req.body.lastName;
+  const email = await req.body.email;
+
+  const insertUsers = `INSERT INTO users (username, email, firstName, lastName, password) VALUES ('${username}', '${email}', '${firstName}', '${lastName}', '${hash}');`;
+  db.any(insertUsers)
+      // If query succeeds, will send an okay status, post on the console for dev purposes
+      .then(function (data){
+          console.log("User Registration Successful")
+          res.redirect('/login');
+      })
+      // If query fails due to error in retrieving required information
+      .catch(function (err){
+          console.log("User Registration Failed, Please Try Again")
+          res.redirect('/');
+      })
+})
+
+
 const auth = (req, res, next) => {
   if (!req.session.user) {
     return res.redirect("/register");
@@ -136,7 +135,7 @@ const auth = (req, res, next) => {
 };
 
 // // Authentication Required
-// app.use(auth);
+app.use(auth);
 
 // Route for logout
 app.get('/logout', (req, res) => {
@@ -187,36 +186,59 @@ app.post("/upload-img", (req, res) => {
   // const data = 
 });
 
-// Register
-app.post('/register', async (req, res) => {
-  //hash the password using bcrypt library
-  const hash = await bcrypt.hash(req.body.password, 10); // Add this back in bcrypt.hash
-  const username = await req.body.username;
-  const firstName = await req.body.firstName;
-  const lastName = await req.body.lastName;
-  const email = await req.body.email;
+// Discover
+app.get("/discover", (req, res) => {
+  let data =
+    'fields name,aggregated_rating,genres.name, screenshots.url ;\nsort aggregated_rating desc;\nwhere aggregated_rating != null & genres != null & screenshots!=null;';
 
-  const insertUsers = `INSERT INTO users (username, email, firstName, lastName, password) VALUES ('${username}', '${email}', '${firstName}', '${lastName}', '${hash}');`;
-  db.any(insertUsers)
-      // If query succeeds, will send an okay status, post on the console for dev purposes
-      .then(function (data){
-          console.log("User Registration Successful")
-          res.redirect('/login');
-      })
-      // If query fails due to error in retrieving required information
-      .catch(function (err){
-          console.log("User Registration Failed, Please Try Again")
-          res.redirect('/');
-      })
-})
-
-app.get('/register', (req, res) =>{
-  res.render('pages/register');
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://api.igdb.com/v4/games",
+    headers: {
+      "Client-ID": process.env.TWITCH_CID,
+      Authorization: "Bearer " + process.env.ACCESS_TOKEN,
+      "Content-Type": "text/plain",
+      Cookie:
+        "__cf_bm=8QJ8jiONy6Mtn0esNjAq1dWDKMpRoJSuFwD.GELBeBY-1699991247-0-AVsH85k1GHSbc/QyMLxL41NsnyPCcMewbUmoqYU27SEklnJ+yZp3DmsAJWgoIQf4n8xdepIl4htcY4I65HSmaZQ=",
+    },
+    data: data,
+  };
+  axios
+    .request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      res.status(200).render("pages/discover", { games: response.data });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send("Failure");
+    });
 });
 
 app.get('/game', (req, res) =>{
   res.render('pages/game');
 });
+
+
+
+app.get('/profile', auth, async (req, res) => {
+  try {
+    const username = req.session.user; // Assuming the user's username is stored in the session
+    const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', [username]);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Render the profile page with user data
+    res.render('pages/profile', { user });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
   module.exports  = app.listen(3000);
   console.log('Server is listening on port 3000');

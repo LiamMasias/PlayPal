@@ -3,9 +3,13 @@
     <div class="container center" style="background-color: rgb(73, 68, 68); margin: 250px; transform: translate(-69%,-15%); height: 1300px;">        
         <div id="Game Contents Top Left" style="display: inline-block;">
             <h1 style="color: white; font-weight: bolder;"><%= IGDB[0].name %></h1>
-            <h5 style="color: rgb(182, 182, 182);">Content Warnings: <% IGDB[0].age_ratings[1].content_descriptions.forEach((desc, index) => { %> <%=
-                `${desc.description}`  %>
-                <% }); %> </h5>
+            <% try{ %>
+                <h5 style="color: rgb(182, 182, 182);">Content Warnings: <% IGDB[0].age_ratings[1].content_descriptions.forEach((desc, index) => { %> <%=
+                    `${desc.description}`  %>
+                    <% }); %> </h5>
+            <% } catch (error) { %>
+                <h5 style="color:rgb(182, 182, 182);">None to be listed</h5>
+            <% } %>
         </div>
         <div id="Game Contents Top Right" style="display: inline-block;">
             <div id="Game Contents Top Right" style="display: inline-block;">

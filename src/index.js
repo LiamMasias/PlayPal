@@ -431,5 +431,22 @@ app.post('/send-friend-request', auth, async (req, res) => {
   }
 });
 
+app.get("/reviews/:gameid", (req, res) => {
+  const gameID = req.params.gameid;
+  const query = `SELECT * FROM reviews WHERE game_id = $1;`;
+  db.any(query, [gameID])
+      .then(function (data){
+          console.log("Reviews Found");
+          res.status(200).render("pages/reviews", {reviews: data, gameID: gameID});
+      })
+      .catch(function (err){
+          console.log("Reviews Not Found");
+      });
+});
+
+
+
+
+
   module.exports  = app.listen(3000);
   console.log('Server is listening on port 3000');

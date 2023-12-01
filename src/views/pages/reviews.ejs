@@ -1,5 +1,28 @@
 <%- include ('../partials/head') %>
 <%- include ('../partials/menu') %>
 
+<main>
+    <div>
+        <!-- List of game reviews goes here -->
+        <table>
+            <tr>
+                <th>Review</th>
+                <th>Username</th>
+                <th>Rating</th>
+            </tr>
+            <% reviews.forEach((review, index) => { %>
+                <tr>
+                    <td><%= review.reviewText %></td>
+                    <td><%= review.username %></td>
+                    <td><%= review.rating %></td>
+                </tr>
+            <% }); %>
+        </table>
+    </div>
+    <form method="POST" action="/addReviews/<%= gameID %>">
+        <input type="text" name="review" placeholder="Write a review...">
+        <button type="submit">Submit</button>
+    </form>
+</main>
 
 <%- include ('../partials/footer') %>

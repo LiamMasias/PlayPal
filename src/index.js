@@ -444,6 +444,23 @@ app.get("/reviews/:gameid", (req, res) => {
       });
 });
 
+app.post("/reviews/:gameid", (req, res) => {
+  const gameID = req.params.gameid;
+  const username = req.session.user.username;
+  const userID = req.session.user.userId;
+  const review = req.body.review;
+  const rating = req.body.rating;
+  const query = `INSERT INTO reviews (gameId, userId, userName, reviewText, rating) VALUES ($1, $2, $3, $4, $5);`;
+  db.any(query, [gameID, userID, username, review, rating])
+      .then(function (data){
+          console.log("Review Added");
+          res.status(200).redirect(`/reviews/${gameID}`);
+      })
+      .catch(function (err){
+          console.log("Review Not Added");
+      });
+});
+
 
 
 

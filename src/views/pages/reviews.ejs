@@ -5,7 +5,11 @@
     <!-- List of game reviews goes here -->
     <h1 style="text-align: center;">Reviews for <a href="/game/<%=gameID %>"><%= gameName %></a></h1>
     <h5 style="text-align: center;">
-        Average User rating: <%= ((reviews.reduce((acc, curr) => acc + curr.rating, 0)) / reviews.length).toFixed(2) %> &#9733;s
+        <% if (reviews.length === 0) { %>
+            No reviews yet!
+        <% } else { %>
+        Average User rating: <%= (((reviews.reduce((acc, curr) => acc + curr.rating, 0)) / reviews.length).toFixed(2)) %> &#9733;s
+        <% } %>
     </h5>
 
     <form method="POST" action="/addReviews/<%= gameID %>" style="margin-left: 20%; width: 60%;">

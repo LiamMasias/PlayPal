@@ -317,31 +317,6 @@ app.get('/game/:gameid', (req, res) =>{
   // res.render('pages/game', {target: targetData, IGDB: IGDBData});
 });
 
-// Route for the reviews page
-app.get('/review/:gameid', async (req, res) => {
-  try {
-    const gameID = req.params.gameid;
-    const data = 
-    `fields age_ratings,cover.url,id,name,aggregated_rating,genres.name, screenshots.url,storyline,summary ;\nsort aggregated_rating desc;\nwhere id=${gameID};`;
-
-    const response = await axios.post('https://api.igdb.com/v4/games', data, {
-      headers: {
-        'Client-ID': process.env.TWITCH_CID,
-        Authorization: 'Bearer ' + process.env.ACCESS_TOKEN,
-        'Content-Type': 'text/plain',
-        Cookie:
-          '__cf_bm=8QJ8jiONy6Mtn0esNjAq1dWDKMpRoJSuFwD.GELBeBY-1699991247-0-AVsH85k1GHSbc/QyMLxL41NsnyPCcMewbUmoqYU27SEklnJ+yZp3DmsAJWgoIQf4n8xdepIl4htcY4I65HSmaZQ=',
-      },
-    });
-
-    const reviews = response.data;
-
-    res.render('pages/review', { reviews });
-  } catch (error) {
-    console.error('Error fetching reviews:', error);
-    res.status(500).send('Failure');
-  }
-});
 
 app.get('/profile', auth, async (req, res) => {
   try {
@@ -431,26 +406,56 @@ app.post('/send-friend-request', auth, async (req, res) => {
   }
 });
 
-app.get("/reviews/:gameid", (req, res) => {
+app.get("/reviews/:gameid", async (req, res) => {
   const gameID = req.params.gameid;
-  const query = `SELECT * FROM reviews WHERE game_id = $1;`;
-  // db.any(query, [gameID])
-  //     .then(function (data){
-  //         console.log("Reviews Found");
-  //         res.status(200).render("pages/reviews", {reviews: data, gameID: gameID});
-  //     })
-  //     .catch(function (err){
-  //         console.log("Reviews Not Found");
-  //     });
-  res.status(200).render("pages/reviews", {gameID: gameID, reviews: [{reviewText: "This game is great", rating: 5, userName: "John Doe"}, {reviewText: "This game is bad", rating: 2, userName: "Jane Doe"}]});
+  const data = `fields name;\nsort aggregated_rating desc;\nwhere id=${gameID};`;
+  let gameName;
+
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://api.igdb.com/v4/games",
+    headers: {
+      "Client-ID": process.env.TWITCH_CID,
+      Authorization: "Bearer " + process.env.ACCESS_TOKEN,
+      "Content-Type": "text/plain",
+      Cookie:
+        "__cf_bm=8QJ8jiONy6Mtn0esNjAq1dWDKMpRoJSuFwD.GELBeBY-1699991247-0-AVsH85k1GHSbc/QyMLxL41NsnyPCcMewbUmoqYU27SEklnJ+yZp3DmsAJWgoIQf4n8xdepIl4htcY4I65HSmaZQ=",
+    },
+    data: data,
+  };
+  await axios.request(config).then((response) => {
+    console.log(JSON.stringify(response.data));
+    gameName = response.data[0].name;
+  });
+
+  const query = `SELECT * FROM reviews WHERE gameId = $1;`;
+  db.any(query, [gameID])
+      .then(function (data){
+          console.log("Reviews Found", data);
+          res.status(200).render("pages/reviews", {reviews: data, gameID: gameID, gameName: gameName});
+      })
+      .catch(function (err){
+          console.log("Reviews Not Found");
+      });
+  // res.status(200).render("pages/reviews", {gameID: gameID, reviews: [{reviewText: "This game is great", rating: 5, userName: "John Doe"}, {reviewText: "This game is bad", rating: 2, userName: "Jane Doe"}]});
 });
 
-app.post("/reviews/:gameid", (req, res) => {
+app.post("/addReviews/:gameid", async (req, res) => {
   const gameID = req.params.gameid;
-  const username = req.session.user.username;
-  const userID = req.session.user.userId;
+  const username = req.session.user;
+  let userID;
   const review = req.body.review;
   const rating = req.body.rating;
+  const query1 = `SELECT * FROM users WHERE username = $1;`;
+  await db.any(query1, [username])
+      .then(function (data){
+          console.log("User Found", data);
+          userID = data[0].userid;
+      })
+      .catch(function (err){
+          console.log("User Not Found");
+      });
   const query = `INSERT INTO reviews (gameId, userId, userName, reviewText, rating) VALUES ($1, $2, $3, $4, $5);`;
   db.any(query, [gameID, userID, username, review, rating])
       .then(function (data){

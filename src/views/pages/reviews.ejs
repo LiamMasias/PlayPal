@@ -1,31 +1,50 @@
-<%- include ('../partials/head') %>
-<%- include ('../partials/menu') %>
+<%- include ('../partials/head') %> <%- include ('../partials/menu') %>
 
 <main>
-    <div>
-        <!-- List of game reviews goes here -->
-        <h1>Reviews for <a href="/game/<%=gameID %>"><%= gameName %></a></h1>
-        <h5>Average User rating: <%= (reviews.reduce((acc, curr) => acc + curr.rating, 0)) / reviews.length %> &#9733;s </h5>
-        <table>
-            <tr>
-                <th>Username</th>
-                <th>Review</th>
-                <th>Rating</th>
-            </tr>
-            <% reviews.forEach((review, index) => { %>
-                <tr>
-                    <td><%= review.username %></td>
-                    <td><%= review.reviewtext %></td>
-                    <td><%= review.rating %></td>
-                </tr>
-            <% }); %>
-        </table>
+  <div>
+    <!-- List of game reviews goes here -->
+    <h1 style="text-align: center;">Reviews for <a href="/game/<%=gameID %>"><%= gameName %></a></h1>
+    <h5 style="text-align: center;">
+      Average User rating: <%= (reviews.reduce((acc, curr) => acc + curr.rating,
+      0)) / reviews.length %> &#9733;s
+    </h5>
+    <div id="review-container" style="margin-left: 20%;">
+      <div class="card-deck">
+        <% reviews.forEach((review, index) => { %>
+        <div class="card" style="width: 75%">
+            <div class="card-body" ">
+                <h5 class="card-title"><%= review.username %></h5>
+                <p class="card-text"><%= review.reviewtext %></p>
+                <div class="card">
+                    <p class="card-text">Rating: <%= review.rating %> 
+                      <% for (let i = 0; i < review.rating; i++) { %>
+                        &#9733;
+                      <% } %>
+                    </p>
+                  </div>
+            </div>
+            
+        </div>
+        <% }); %>
+      </div>
     </div>
-    <form method="POST" action="/addReviews/<%= gameID %>">
-        <input type="text" name="review" placeholder="Write a review...">
-        <input type="number" name="rating" placeholder="Rating (1-5)">
-        <button type="submit">Submit</button>
-    </form>
+  </div>
+
+  <form method="POST" action="/addReviews/<%= gameID %>">
+    <input
+      type="text"
+      name="review"
+      placeholder="Write a review..."
+      class="form-control"
+    />
+    <input
+      type="number"
+      name="rating"
+      placeholder="Rating (1-5)"
+      class="form-control"
+    />
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
 </main>
 
 <%- include ('../partials/footer') %>

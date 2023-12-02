@@ -10,6 +10,18 @@ CREATE TABLE users(
 
 -- for ratings, will need, username, rating, foreign key to game ID
 
+DROP TABLE IF EXISTS reviews CASCADE;
+CREATE TABLE reviews(
+    reviewId SERIAL PRIMARY KEY,
+    gameId INT,
+    userId INT,
+    userName VARCHAR(50),
+    rating INT,
+    reviewText TEXT,
+    timeCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (gameId) REFERENCES games(gameId) ON DELETE CASCADE, -- not sure where to get game id
+    FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
+
 --friendships table!
 CREATE TABLE friendships (
   id SERIAL PRIMARY KEY,

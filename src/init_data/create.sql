@@ -21,4 +21,11 @@ CREATE TABLE reviews(
     timeCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (gameId) REFERENCES games(gameId) ON DELETE CASCADE, -- not sure where to get game id
     FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
+
+--friendships table!
+CREATE TABLE friendships (
+  id SERIAL PRIMARY KEY,
+  user_id1 INT REFERENCES users(userId),
+  user_id2 INT REFERENCES users(userId),
+  status VARCHAR(20) DEFAULT 'pending' -- 'pending', 'accepted', 'rejected', etc.
 );

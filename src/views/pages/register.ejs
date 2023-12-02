@@ -8,7 +8,7 @@
         <h2>Welcome New User!</h2>
         <div class="container-fluid" style="display: grid; grid-template-columns: 1fr 1fr; grid-gap: 20px;">
           <div style="background-color: rgb(154, 153, 153); border-radius: 5%;">
-            <form action="http://localhost:3000/register" method="POST" style="width: 450px; margin-right: auto; margin-left: 0;">
+            <form action="/register" method="POST" style="width: 450px; margin-right: auto; margin-left: 0;">
                 <div class="form-group">
                   <label for="email">Email Address</label>
                   <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="alanturing@example.com">
@@ -32,7 +32,7 @@
                   <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Turing">
                 </div>
                 <div class="container" style="padding-top: 20px;">
-                    <p>Already have an account? <a class="link" href="http://localhost:3000/login">Login</a> <button type="submit" class="btn btn-primary right">Register</button></p> 
+                    <p>Already have an account? <a class="link" href="/login">Login</a> <button type="submit" class="btn btn-primary right">Register</button></p> 
                 </div>
               </form>
             </div>

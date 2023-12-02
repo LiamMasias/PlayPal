@@ -17,6 +17,23 @@ const dbConfig = {
 
 const db = pgp(dbConfig);
 
+const createFriendshipsTable = `
+  CREATE TABLE IF NOT EXISTS friendships (
+    id SERIAL PRIMARY KEY,
+    user_id1 INT REFERENCES users(userId),
+    user_id2 INT REFERENCES users(userId),
+    status VARCHAR(20) DEFAULT 'pending'
+  );
+`;
+
+db.none(createFriendshipsTable)
+  .then(() => {
+    console.log('Friendships table created successfully');
+  })
+  .catch((error) => {
+    console.error('Error creating friendships table:', error.message || error);
+  });
+
 // test your database
 db.connect()
   .then(obj => {
@@ -65,7 +82,7 @@ app.get("/login", (req, res) => {
 
 app.get("/discover", (req, res) => {
   let data =
-    'fields cover.url, id,name,aggregated_rating,genres.name, screenshots.url, storyline ;\nsort aggregated_rating desc;\nwhere cover.url != null & aggregated_rating != null & genres != null & screenshots!=null & storyline != null;';
+  'fields cover.url, id,name,aggregated_rating,genres.name, screenshots.url, storyline ;\nsort aggregated_rating desc;\nwhere cover.url != null & aggregated_rating != null & genres != null & screenshots!=null & storyline != null & age_ratings != null;';
 
   let config = {
     method: "post",
@@ -128,6 +145,32 @@ app.post("/login", async (req, res) => {
       });
 })
 
+app.get('/register', (req, res) =>{
+  res.render('pages/register');
+});
+app.post('/register', async (req, res) => {
+  //hash the password using bcrypt library
+  const hash = await bcrypt.hash(req.body.password, 10); // Add this back in bcrypt.hash
+  const username = await req.body.username;
+  const firstName = await req.body.firstName;
+  const lastName = await req.body.lastName;
+  const email = await req.body.email;
+
+  const insertUsers = `INSERT INTO users (username, email, firstName, lastName, password) VALUES ('${username}', '${email}', '${firstName}', '${lastName}', '${hash}');`;
+  db.any(insertUsers)
+      // If query succeeds, will send an okay status, post on the console for dev purposes
+      .then(function (data){
+          console.log("User Registration Successful")
+          res.redirect('/login');
+      })
+      // If query fails due to error in retrieving required information
+      .catch(function (err){
+          console.log("User Registration Failed, Please Try Again")
+          res.redirect('/');
+      })
+})
+
+
 const auth = (req, res, next) => {
   if (!req.session.user) {
     return res.redirect("/register");
@@ -136,7 +179,7 @@ const auth = (req, res, next) => {
 };
 
 // // Authentication Required
-// app.use(auth);
+app.use(auth);
 
 // Route for logout
 app.get('/logout', (req, res) => {
@@ -221,7 +264,7 @@ app.get('/game/:gameid', (req, res) =>{
   let IGDBData;
 
   let data =
-    `fields age_ratings,cover.url,id,name,aggregated_rating,genres.name, screenshots.url,storyline,summary ;\nsort aggregated_rating desc;\nwhere id=${gameID};`;
+  `fields age_ratings.content_descriptions.description,cover.url,id,name,aggregated_rating,genres.name, screenshots.url,storyline,summary ;\nsort aggregated_rating desc;\nwhere id=${gameID};`;
 
   let config = {
     method: "post",
@@ -297,6 +340,94 @@ app.get('/review/:gameid', async (req, res) => {
   } catch (error) {
     console.error('Error fetching reviews:', error);
     res.status(500).send('Failure');
+  }
+});
+
+app.get('/profile', auth, async (req, res) => {
+  try {
+    const username = req.session.user; // Assuming the user's username is stored in the session
+    const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', [username]);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Render the profile page with user data
+    const friends = await getFriends(user.userId);
+    const friendRequests = await getFriendRequests(user.userId);
+
+    res.render('pages/profile', { user, friends, friendRequests });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+//helper fcn for getting friendfs
+async function getFriends(userId) {
+  try {
+    const query = `
+      SELECT users.*
+      FROM users
+      JOIN friendships ON users.userId = friendships.user_id2
+      WHERE friendships.user_id1 = $1 AND friendships.status = 'accepted';
+    `;
+    const friends = await db.any(query, [userId]);
+    return friends;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+}
+//helper fcn for grabbing friend reqs
+async function getFriendRequests(userId) {
+  try {
+    const query = `
+      SELECT users.*
+      FROM users
+      JOIN friendships ON users.userId = friendships.user_id1
+      WHERE friendships.user_id2 = $1 AND friendships.status = 'pending';
+    `;
+    const friendRequests = await db.any(query, [userId]);
+    return friendRequests;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+}
+
+app.post('/send-friend-request', auth, async (req, res) => {
+  try {
+    // Get the current user and friend's username from the form
+    const { user } = req.session;
+    const { friendUsername } = req.body;
+
+    // Get user IDs for the current user and the friend
+    const currentUser = await db.one('SELECT userId FROM users WHERE username = $1', [user]);
+    const friend = await db.one('SELECT userId FROM users WHERE username = $1', [friendUsername]);
+
+    // Check if a friend request already exists
+    const existingRequest = await db.oneOrNone(
+      'SELECT * FROM friendships WHERE (user_id1 = $1 AND user_id2 = $2) OR (user_id1 = $2 AND user_id2 = $1)',
+      [currentUser.userId, friend.userId]
+    );
+
+    if (existingRequest) {
+      return res.status(400).json({ error: 'Friend request already sent or received.' });
+    }
+
+    // Create a new friend request
+    await db.none('INSERT INTO friendships (user_id1, user_id2, status) VALUES ($1, $2, $3)', [
+      currentUser.userId,
+      friend.userId,
+      'pending',
+    ]);
+
+    res.status(200).json({ message: 'Friend request sent successfully.' });
+    res.render('pages/profile', { user, friends, friendRequests });
+  } catch (error) {
+    console.error('Error sending friend request:', error.message || error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 

@@ -26,9 +26,20 @@ CREATE TABLE reviews(
  -- Commented out due to no direct link to games data base 
 
 --friendships table!
+DROP TABLE IF EXISTS friendships CASCADE;
 CREATE TABLE friendships (
   id SERIAL PRIMARY KEY,
   user_id1 INT REFERENCES users(userId),
   user_id2 INT REFERENCES users(userId),
   status VARCHAR(20) DEFAULT 'pending' -- 'pending', 'accepted', 'rejected', etc.
 );
+
+-- saved games table
+DROP TABLE IF EXISTS savedGames CASCADE;
+CREATE TABLE savedGames(
+  id SERIAL PRIMARY KEY,
+  userId INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
+  -- gameId INTEGET NOT NULL REFERENCES
+  -- shelf is for "which" shelf will be put on, whether that is played, playing, or want to play
+  shelf VARCHAR NOT NULL,
+)

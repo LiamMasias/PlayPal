@@ -434,14 +434,15 @@ app.post('/send-friend-request', auth, async (req, res) => {
 app.get("/reviews/:gameid", (req, res) => {
   const gameID = req.params.gameid;
   const query = `SELECT * FROM reviews WHERE game_id = $1;`;
-  db.any(query, [gameID])
-      .then(function (data){
-          console.log("Reviews Found");
-          res.status(200).render("pages/reviews", {reviews: data, gameID: gameID});
-      })
-      .catch(function (err){
-          console.log("Reviews Not Found");
-      });
+  // db.any(query, [gameID])
+  //     .then(function (data){
+  //         console.log("Reviews Found");
+  //         res.status(200).render("pages/reviews", {reviews: data, gameID: gameID});
+  //     })
+  //     .catch(function (err){
+  //         console.log("Reviews Not Found");
+  //     });
+  res.status(200).render("pages/reviews", {gameID: gameID, reviews: [{reviewText: "This game is great", rating: 5, userName: "John Doe"}, {reviewText: "This game is bad", rating: 2, userName: "Jane Doe"}]});
 });
 
 app.post("/reviews/:gameid", (req, res) => {

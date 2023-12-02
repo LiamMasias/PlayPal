@@ -4,6 +4,8 @@
 <main>
     <div>
         <!-- List of game reviews goes here -->
+        <h1>Reviews</h1>
+        <h5>Average User rating: <%= (reviews.reduce((acc, curr) => acc + curr.rating, 0)) / reviews.length %> &#9733;s </h5>
         <table>
             <tr>
                 <th>Review</th>
@@ -13,7 +15,7 @@
             <% reviews.forEach((review, index) => { %>
                 <tr>
                     <td><%= review.reviewText %></td>
-                    <td><%= review.username %></td>
+                    <td><%= review.userName %></td>
                     <td><%= review.rating %></td>
                 </tr>
             <% }); %>

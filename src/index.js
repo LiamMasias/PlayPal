@@ -274,31 +274,103 @@ app.get('/game/:gameid', (req, res) =>{
   // res.render('pages/game', {target: targetData, IGDB: IGDBData});
 });
 
-// Route for the reviews page
-app.get('/review/:gameid', async (req, res) => {
+//Route for my reviews page
+app.get("/myReviews", async (req, res) => {
+  const username = req.session.user;
+  let userID;
   try {
-    const gameID = req.params.gameid;
-    const data = 
-    `fields age_ratings,cover.url,id,name,aggregated_rating,genres.name, screenshots.url,storyline,summary ;\nsort aggregated_rating desc;\nwhere id=${gameID};`;
+    const query1 = `SELECT * FROM users WHERE username = $1;`;
+    const userData = await db.any(query1, [username]);
 
-    const response = await axios.post('https://api.igdb.com/v4/games', data, {
-      headers: {
-        'Client-ID': process.env.TWITCH_CID,
-        Authorization: 'Bearer ' + process.env.ACCESS_TOKEN,
-        'Content-Type': 'text/plain',
-        Cookie:
-          '__cf_bm=8QJ8jiONy6Mtn0esNjAq1dWDKMpRoJSuFwD.GELBeBY-1699991247-0-AVsH85k1GHSbc/QyMLxL41NsnyPCcMewbUmoqYU27SEklnJ+yZp3DmsAJWgoIQf4n8xdepIl4htcY4I65HSmaZQ=',
-      },
-    });
+    // Check if user data is found
+    if (userData && userData.length > 0) {
+      // Match user id
+      userID = userData[0].userid;
 
-    const reviews = response.data;
+      const query2 = 'SELECT * FROM reviews WHERE reviews.userId = $1';
+      const reviewData = await db.any(query2, [userID]);
 
-    res.render('pages/review', { reviews });
-  } catch (error) {
-    console.error('Error fetching reviews:', error);
-    res.status(500).send('Failure');
+      console.log("Here is the reviewData:", reviewData);
+
+      res.status(200).render('pages/myReviews', { reviews: reviewData });
+    } else {
+      console.log("User Not Found");
+      res.status(404).send("User not found");
+    }
+  } catch (err) {
+    console.log("Error fetching reviews:", err);
+    res.status(500).send('Internal Server Error');
   }
 });
+
+//Route to add reviews
+app.get('/addReview', (req, res) => {
+  res.render('pages/addReview');
+});
+
+app.post("/addReview", async (req, res) => {
+  // app.post("/review/add/:gameid", async (req, res) => {
+    // const gameID = req.params.gameid;
+    const username = req.session.user;
+    let userID;
+  
+    try {
+      // Get user data
+      const query1 = `SELECT * FROM users WHERE username = $1;`;
+      const userData = await db.any(query1, [username]);
+  
+      // Check if user data is found
+      if (userData && userData.length > 0) {
+        // Match user id
+        userID = userData[0].userid;
+
+        const query = `INSERT INTO reviews (gameId, userId, userName, rating, reviewText) VALUES ($1, $2, $3, $4, $5);`;
+        await db.any(query, [req.body.gameID, userID, username, req.body.rating, req.body.reviewText]);
+  
+        console.log("Review Added");
+        res.status(200).redirect(`/myReviews`);
+      } else {
+        console.log("User Not Found");
+        res.status(404).send("User not foundjhg");
+      }
+    } catch (err) {
+      console.log("Error adding review:", err);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
+// Route to show all reviews in database
+app.get('/allReviews', async (req, res) => {
+  try {
+    const getAllReviews = 'SELECT * FROM reviews';
+    const allReviews = await db.any(getAllReviews);
+    res.render('pages/allReviews', { reviews: allReviews });
+  } catch (error) {
+    console.error('Error retrieving all reviews:', error);
+    res.render('pages/error', { error: 'Error retrieving reviews.' });
+  }
+});
+
+// // Route to delete your reviews
+// app.get('/deleteReview', (req, res) => {
+//   res.render('pages/deleteReview');
+// });
+
+// // Route to delete a selected review
+// app.post('/deleteReview', async (req, res) => {
+//   const reviewId = req.body.reviewId;
+
+//   try {
+//     const deleteQuery = 'DELETE FROM reviews WHERE reviewid = $1';
+//     await db.none(deleteQuery, [reviewId]);
+
+//     console.log('Review deleted successfully');
+//     res.status(200).redirect('/all-reviews');
+//   } catch (error) {
+//     console.error('Error deleting review:', error);
+//     res.status(500).send('Internal Server Error');
+//   }
+// });
 
   module.exports  = app.listen(3000);
   console.log('Server is listening on port 3000');

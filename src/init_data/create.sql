@@ -19,6 +19,5 @@ CREATE TABLE reviews(
     rating INT,
     reviewText TEXT,
     timeCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (gameId) REFERENCES games(gameId) ON DELETE CASCADE, -- not sure where to get game id
     FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
 );

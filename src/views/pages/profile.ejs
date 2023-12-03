@@ -1,0 +1,65 @@
+<%- include ('../partials/head') %> <%- include ('../partials/menu') %>
+
+<main class="container mt-5">
+  <h1 class="mb-4">Profile</h1>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">User Information</h5>
+          <p class="card-text">Username: <%= user.username %></p>
+          <p class="card-text">Email: <%= user.email %></p>
+          <p class="card-text">First Name: <%= user.firstname %></p>
+          <p class="card-text">Last Name: <%= user.lastname %></p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <!-- friend list display -->
+          <h5 class="card-title">Friends</h5>
+          <% if (friends && friends.length > 0) { %>
+            <ul class="list-group">
+              <% friends.forEach(friend => { %>
+                <li class="list-group-item"><%= friend.username %></li>
+              <% }); %>
+            </ul>
+          <% } else { %>
+            <p class="card-text">No friends yet.</p>
+          <% } %>
+          <!-- Friend Requests card -->
+          <div class="card mt-4">
+            <div class="card-body">
+              <h5 class="card-title">Friend Requests</h5>
+              <% if (user.friendRequests && user.friendRequests.length > 0) { %>
+                <ul class="list-group">
+                  <% user.friendRequests.forEach(request => { %>
+                    <li class="list-group-item">
+                      <%= request.username %> has sent you a friend request.
+                      <!-- Add form to accept/reject friend request -->
+                    </li>
+                  <% }); %>
+                </ul>
+              <% } else { %>
+                <p class="card-text">No friend requests.</p>
+              <% } %>
+            </div>
+          </div>
+
+          <!-- Send Friend Request Form -->
+          <form action="/send-friend-request" method="POST">
+            <div class="form-group">
+              <label for="friendUsername">Friend's Username</label>
+              <input type="text" class="form-control" id="friendUsername" name="friendUsername" required>
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Send Friend Request</button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include ('../partials/footer') %>

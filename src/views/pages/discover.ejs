@@ -17,7 +17,7 @@
                   `${genre.name}${index < game.genres.length - 1 ? ',' : ''} ` %>
                   <% }); %>
                 </p>
-                <a href="http://localhost:3000/game/<%= game.id %>" class="btn btn-primary" style="position: relative;">View Game</a>
+                <a href="/game/<%= game.id %>" class="btn btn-primary" style="position: relative;">View Game</a>
               </div>
             </div>
           </div>
@@ -41,7 +41,7 @@
                     `${genre.name}${index < game.genres.length - 1 ? ',' : ''} ` %>
                     <% }); %>
                   </p>
-                  <a href="http://localhost:3000/game/<%= game.id %>" class="btn btn-primary" style="position: relative;">Go somewhere</a>
+                  <a href="/game/<%= game.id %>" class="btn btn-primary" style="position: relative;">Go somewhere</a>
                 </div>
               </div>
             </div>

@@ -318,6 +318,50 @@ app.get('/game/:gameid', (req, res) =>{
 });
 
 
+app.get("/search", async (req, res) => {
+  const limit = 500;
+  const requestDataBase =
+    'fields name, genres.name; limit ' + limit + '; where version_parent = null; where aggregated_rating_count > 300; sort aggregated_rating_count desc; where rating != null;';
+
+  const apiRequests = Array.from({ length: 4 }, (_, index) => {
+    const offset = index * limit; // Calculate offset based on index
+    const requestData = `${requestDataBase} offset ${offset};`;
+
+    return axios.post("https://api.igdb.com/v4/games", requestData, {
+      method: "post",
+      maxBodyLength: Infinity,
+      headers: {
+        "Client-ID": process.env.TWITCH_CID,
+        Authorization: "Bearer " + process.env.ACCESS_TOKEN,
+        "Content-Type": "text/plain",
+        Cookie:
+          "__cf_bm=8QJ8jiONy6Mtn0esNjAq1dWDKMpRoJSuFwD.GELBeBY-1699991247-0-AVsH85k1GHSbc/QyMLxL41NsnyPCcMewbUmoqYU27SEklnJ+yZp3DmsAJWgoIQf4n8xdepIl4htcY4I65HSmaZQ=",
+      },
+      data: requestData,
+    });
+  });
+
+  try {
+    const responses = await Promise.all(apiRequests);
+
+    // Combine the data from all API responses
+    const combinedData = responses.reduce((acc, response) => acc.concat(response.data), []);
+
+    // Sort the combined data alphabetically by game name
+    const sortedGames = combinedData.sort((a, b) => {
+      const nameA = a.name.toLowerCase();
+      const nameB = b.name.toLowerCase();
+      return nameA.localeCompare(nameB);
+    });
+
+    res.status(200).render("pages/search", { games: sortedGames });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Failure");
+  }
+});
+
+
 app.get('/profile', auth, async (req, res) => {
   try {
     const username = req.session.user; // Assuming the user's username is stored in the session
@@ -473,3 +517,5 @@ app.post("/addReviews/:gameid", async (req, res) => {
 
   module.exports  = app.listen(3000);
   console.log('Server is listening on port 3000');
+
+  

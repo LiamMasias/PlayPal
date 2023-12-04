@@ -264,7 +264,7 @@ app.get('/game/:gameid', (req, res) =>{
   let IGDBData;
 
   let data =
-  `fields age_ratings.content_descriptions.description,cover.url,id,name,aggregated_rating,genres.name, screenshots.url,storyline,summary ;\nsort aggregated_rating desc;\nwhere id=${gameID};`;
+  `fields age_ratings.content_descriptions.description,cover.image_id,id,name,aggregated_rating,genres.name, screenshots.*,storyline,summary ;\nsort aggregated_rating desc;\nwhere id=${gameID};`;
 
   let config = {
     method: "post",

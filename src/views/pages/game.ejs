@@ -5,20 +5,27 @@
     <div class="game-info text-left">
       <h1><%= IGDB[0].name %></h1>
 
-      <div class="content-warnings">
-        <% try { %> <% let allDescriptions = "";
-        IGDB[0].age_ratings[1].content_descriptions.forEach((desc, index) => {
-        allDescriptions += `${desc.description}`; if (index <
-        IGDB[0].age_ratings[1].content_descriptions.length - 1) {
-        allDescriptions += ', '; } }); %>
-        <h5>Content Warnings: <%= allDescriptions.trim() %></h5>
-        <% } catch (error) { %> None to be listed <% } %>
-      </div>
+      <div style="display: flex;">
 
-      <div class="user-ratings">
-        <h5>User Ratings: <%= IGDB[0].aggregated_rating %></h5>
+        <div style="flex: 1;">
+          <div class="content-warnings">
+            <% try { %>
+            <% let allDescriptions = ""; IGDB[0].age_ratings[1].content_descriptions.forEach((desc, index) => { allDescriptions +=
+            `${desc.description}`; if (index < IGDB[0].age_ratings[1].content_descriptions.length - 1) { allDescriptions += ', '; } });
+            %>
+            <h5>Content Warnings: <%= allDescriptions.trim() %></h5>
+            <% } catch (error) { %> None to be listed <% } %>
+          </div>
+      
+          <div class="user-ratings">
+            <h5>User Ratings: <%= IGDB[0].aggregated_rating %></h5>
+          </div>
+        </div>
+      
+        <div>
+          <a href="/reviews/<%= IGDB[0].id %>" class="btn btn-danger">Check User Reviews!</a>
+        </div>
       </div>
-
       <div style="display: flex;">
 
         <div style="flex: 0 0 auto;">
@@ -73,15 +80,15 @@
       <div class="where-to-buy">
         <h1>Where to Buy:</h1>
         <h2>
-          <a href="https://www.target.com/s?searchTerm=<%= IGDB[0].name %>"
+          <a  class="btn btn-danger" href="https://www.target.com/s?searchTerm=<%= IGDB[0].name %>"
             >Target</a
           >
         </h2>
         <h2>
-          <a href="https://www.amazon.com/s?k=<%= IGDB[0].name %>">Amazon</a>
+          <a  class="btn btn-danger" href="https://www.amazon.com/s?k=<%= IGDB[0].name %>">Amazon</a>
         </h2>
         <h2>
-          <a href="https://www.gamestop.com/search/?q=<%= IGDB[0].name %>"
+          <a  class="btn btn-danger" href="https://www.gamestop.com/search/?q=<%= IGDB[0].name %>"
             >GameStop</a
           >
         </h2>

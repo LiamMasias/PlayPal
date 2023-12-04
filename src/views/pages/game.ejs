@@ -1,37 +1,73 @@
-<%- include ('../partials/head') %> <%- include ('../partials/menu') %>
+<%- include ('../partials/head') %> 
+<%- include ('../partials/menu') %>
+
 <main>
-    <div class="container center" style="background-color: rgb(73, 68, 68); margin: 250px; transform: translate(-69%,-15%); height: 1300px;">        
-        <div id="Game Contents Top Left" style="display: inline-block;">
-            <h1 style="color: white; font-weight: bolder;"><%= IGDB[0].name %></h1>
-            <% try{ %>
-                <h5 style="color: rgb(182, 182, 182);">Content Warnings: <% IGDB[0].age_ratings[1].content_descriptions.forEach((desc, index) => { %> <%=
-                    `${desc.description}`  %>
-                    <% }); %> </h5>
-            <% } catch (error) { %>
-                None to be listed
-            <% } %>
-        </div>
-        <div id="Game Contents Top Right" style="display: inline-block;">
-            <div id="Game Contents Top Right" style="display: inline-block;">
-                <h5 style="color: rgb(182, 182, 182);">User Ratings! <%= IGDB[0].aggregated_rating %> </h5>
-        </div>
-        <div class="card center" style="width: 55rem; height: 750px; transform: translate(-50%, -43%); background-color: rgb(73, 68, 68); border: none;">
-            <img class="card-img-top" style="height: 600px;" src="<%= 'https://' + IGDB[0].cover.url %>" alt="Game Screenshot">
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item"><%= IGDB[0].storyline %></li>
-            </ul>
-            <div class="card-body">
-              <a href="#" class="card-link">Back To Top</a>
-              <a href="/reviews/<%= IGDB[0].id %>" class="card-link">Check User Reviews!</a>
-              <div id="target-data">
-                <h1>Where to Buy!</h1>
+    <div class="container center" style="background-color: #373737;color: white;">
+
+        <div class="game-info">
+            <h1><%= IGDB[0].name %></h1>
+
+            <div class="content-warnings">
+                <% try { %>
+                    <% 
+                        let allDescriptions = "";
+                        IGDB[0].age_ratings[1].content_descriptions.forEach((desc, index) => {
+                            allDescriptions += `${desc.description}`;
+                            if (index < IGDB[0].age_ratings[1].content_descriptions.length - 1) {
+                                allDescriptions += ', ';
+                            }
+                        });
+                    %>
+                    <h5>Content Warnings: <%= allDescriptions.trim() %></h5y>
+                <% } catch (error) { %>
+                    None to be listed
+                <% } %>
+            </div>
+
+            <div class="user-ratings">
+                <h5>User Ratings: <%= IGDB[0].aggregated_rating %></h5>
+            </div>
+
+            <div class="game-cover">
+                <img src="<%= 'https://' + IGDB[0].cover.url %>" alt="Game Screenshot">
+            </div>
+
+            <div id="screenshot-carousel" class="carousel slide" data-ride="carousel">
+              <div class="carousel-inner">
+                  <% IGDB[0].screenshots.forEach((screenshot, index) => { %>
+                      <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                          <img src="<%= 'https://images.igdb.com/igdb/image/upload/t_screenshot_big/' + screenshot.image_id + '.jpg' %>" class="d-block w-100" alt="Screenshot">
+                      </div>
+                  <% }); %>
+              </div>
+              <a class="carousel-control-prev" href="#screenshot-carousel" role="button" data-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Previous</span>
+              </a>
+              <a class="carousel-control-next" href="#screenshot-carousel" role="button" data-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Next</span>
+              </a>
+          </div>
+
+            <div class="where-to-buy">
+                <h1>Where to Buy:</h1>
                 <h2><a href="https://www.target.com/s?searchTerm=<%= IGDB[0].name %>">Target</a></h2>
                 <h2><a href="https://www.amazon.com/s?k=<%= IGDB[0].name %>">Amazon</a></h2>
                 <h2><a href="https://www.gamestop.com/search/?q=<%= IGDB[0].name %>">GameStop</a></h2>
             </div>
-            </div>
-          </div>
         </div>
+    </div>
+
+    
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      $(document).ready(function(){
+          $('#screenshot-carousel').carousel();
+      });
+  </script>
 </main>
 
 <%- include ('../partials/footer') %>

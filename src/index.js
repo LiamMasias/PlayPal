@@ -446,6 +446,34 @@ app.post('/send-friend-request', auth, async (req, res) => {
   }
 });
 
+// //Route for my reviews page
+// app.get("/myReviews", async (req, res) => {
+//   const username = req.session.user;
+//   let userID;
+//   try {
+//     const query1 = `SELECT * FROM users WHERE username = $1;`;
+//     const userData = await db.any(query1, [username]);
+
+//     // Check if user data is found
+//     if (userData && userData.length > 0) {
+//       // Match user id
+//       userID = userData[0].userid;
+
+//       const query2 = 'SELECT * FROM reviews WHERE reviews.userId = $1';
+//       const reviewData = await db.any(query2, [userID]);
+
+//       console.log("Here is the reviewData:", reviewData);
+
+//       res.status(200).render('pages/myReviews', { reviews: reviewData });
+//     } else {
+//       console.log("User Not Found");
+//       res.status(404).send("User not found");
+//     }
+//   } catch (err) {
+//     console.log("Error fetching reviews:", err);
+//     res.status(500).send('Internal Server Error');
+//   }
+// });
 
 //Route for my reviews page
 app.get("/myReviews", async (req, res) => {
@@ -463,9 +491,15 @@ app.get("/myReviews", async (req, res) => {
       const query2 = 'SELECT * FROM reviews WHERE reviews.userId = $1';
       const reviewData = await db.any(query2, [userID]);
 
-      console.log("Here is the reviewData:", reviewData);
+      // Fetch additional information (game picture and name) from IGDB API
+      const reviewsWithGameInfo = await Promise.all(
+        reviewData.map(async (review) => {
+          const gameInfo = await getGameInfo(review.gameId);
+          return { ...review, gameCoverImageUrl: gameInfo.cover.url, gameName: gameInfo.name };
+        })
+      );
 
-      res.status(200).render('pages/myReviews', { reviews: reviewData });
+      res.status(200).render('pages/myReviews', { reviews: reviewsWithGameInfo });
     } else {
       console.log("User Not Found");
       res.status(404).send("User not found");
@@ -475,6 +509,32 @@ app.get("/myReviews", async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+// Function to fetch game information from IGDB API
+async function getGameInfo(gameId) {
+  let data =
+  'fields cover.url, id,name,aggregated_rating,genres.name, screenshots.url, storyline ;\nsort aggregated_rating desc;\nwhere cover.url != null & aggregated_rating != null & genres != null & screenshots!=null & storyline != null & age_ratings != null;';
+  const config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://api.igdb.com/v4/games",
+    headers: {
+      "Client-ID": process.env.TWITCH_CID,
+      Authorization: "Bearer " + process.env.ACCESS_TOKEN,
+      "Content-Type": "text/plain",
+      Cookie: "__cf_bm=8QJ8jiONy6Mtn0esNjAq1dWDKMpRoJSuFwD.GELBeBY-1699991247-0-AVsH85k1GHSbc/QyMLxL41NsnyPCcMewbUmoqYU27SEklnJ+yZp3DmsAJWgoIQf4n8xdepIl4htcY4I65HSmaZQ=",
+    },
+    data: data,
+  };
+
+  try {
+    const response = await axios.request(config);
+    return response.data[0];
+  } catch (error) {
+    console.log(error);
+    throw new Error("Failed to fetch game information from IGDB");
+  }
+}
 
 //Route to add reviews
 app.get('/addReview', (req, res) => {

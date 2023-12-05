@@ -151,12 +151,12 @@ app.post("/login", async (req, res) => {
           if(match){
               req.session.user = username;
               req.session.save();
-              res.redirect("/home");
+              res.redirect("/discover");
           } else {
               throw new Error("User not found")
           }
           } else {
-              res.redirect("/home")
+              res.redirect("/discover")
           }
       })
       .catch((err) => {
@@ -221,31 +221,7 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
-  res.redirect('/discover');
-  // let data = 'fields name,aggregated_rating,genres.name;\nsort aggregated_rating desc;\nwhere aggregated_rating != null & genres != null;';
-
-  // let config = {
-  //   method: 'post',
-  //   maxBodyLength: Infinity,
-  //   url: 'https://api.igdb.com/v4/games',
-  //   headers: { 
-  //     'Client-ID': process.env.TWITCH_CID, 
-  //     'Authorization': 'Bearer '+ process.env.ACCESS_TOKEN, 
-  //     'Content-Type': 'text/plain', 
-  //     'Cookie': '__cf_bm=8QJ8jiONy6Mtn0esNjAq1dWDKMpRoJSuFwD.GELBeBY-1699991247-0-AVsH85k1GHSbc/QyMLxL41NsnyPCcMewbUmoqYU27SEklnJ+yZp3DmsAJWgoIQf4n8xdepIl4htcY4I65HSmaZQ='
-  //   },
-  //   data : data
-  // };
-
-  // axios.request(config)
-  // .then((response) => {
-  //   console.log(JSON.stringify(response.data));
-  //   res.sendStatus(200).message("Success").render("pages/home", {games: response});
-  // })
-  // .catch((error) => {
-  //   res.sendStatus(500).message("Failure");
-  //   console.log(error);
-  // });
+  res.render('pages/home');
 });
 
 app.post("/upload-img", (req, res) => {

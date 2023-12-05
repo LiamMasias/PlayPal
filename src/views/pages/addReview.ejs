@@ -1,0 +1,25 @@
+
+<%- include ('../partials/head') %>
+<%- include ('../partials/menu') %>
+
+<main>
+ <div class="container mt-4">
+    <h2>Add a New Review</h2>
+    <form action="/addReview" method="post">
+      <div class="mb-3">
+        <label for="gameId" class="form-label">Game ID:</label>
+        <input type="number" class="form-control" id="gameId" name="gameID" required placeholder="Enter Game ID">
+
+        <label for="rating" class="form-label">Rating:</label>
+        <input type="number" class="form-control" id="rating" name="rating" required placeholder="Enter Rating (1-100)">
+        
+        <label for="reviewText" class="form-label">Description:</label>
+        <input type="text" class="form-control" id="reviewText" name="reviewText" required placeholder="Enter Review Description">
+      </div>
+      <button type="submit" class="btn btn-primary">Submit Review</button>
+    </form>
+  </div>
+</main>
+
+<%- include ('../partials/footer') %>
+

@@ -12,19 +12,15 @@ CREATE TABLE users(
 
 DROP TABLE IF EXISTS reviews CASCADE;
 CREATE TABLE reviews(
-  reviewId SERIAL PRIMARY KEY,
-  gameId INT,
-  userId INT,
-  userName VARCHAR(50),
-  rating INT,
-  reviewText TEXT,
-  timeCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  -- FOREIGN KEY (gameId) REFERENCES games(gameId) ON DELETE CASCADE,
-  FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
+    reviewId SERIAL PRIMARY KEY,
+    gameId INT,
+    userId INT,
+    userName VARCHAR(50),
+    rating INT,
+    reviewText TEXT,
+    timeCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
 );
- -- not sure where to get game id
- -- Commented out due to no direct link to games data base 
-
 --friendships table!
 CREATE TABLE friendships (
   id SERIAL PRIMARY KEY,

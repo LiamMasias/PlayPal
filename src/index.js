@@ -382,8 +382,6 @@ app.get("/search", async (req, res) => {
     res.status(500).send("Failure");
   }
 });
-
-
 app.get('/profile', auth, async (req, res) => {
   try {
     const username = req.session.user; // Assuming the user's username is stored in the session
@@ -472,6 +470,104 @@ app.post('/send-friend-request', auth, async (req, res) => {
   }
 });
 
+
+//Route for my reviews page
+app.get("/myReviews", async (req, res) => {
+  const username = req.session.user;
+  let userID;
+  try {
+    const query1 = `SELECT * FROM users WHERE username = $1;`;
+    const userData = await db.any(query1, [username]);
+
+    // Check if user data is found
+    if (userData && userData.length > 0) {
+      // Match user id
+      userID = userData[0].userid;
+
+      const query2 = 'SELECT * FROM reviews WHERE reviews.userId = $1';
+      const reviewData = await db.any(query2, [userID]);
+
+      console.log("Here is the reviewData:", reviewData);
+
+      res.status(200).render('pages/myReviews', { reviews: reviewData });
+    } else {
+      console.log("User Not Found");
+      res.status(404).send("User not found");
+    }
+  } catch (err) {
+    console.log("Error fetching reviews:", err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+//Route to add reviews
+app.get('/addReview', (req, res) => {
+  res.render('pages/addReview');
+});
+
+app.post("/addReview", async (req, res) => {
+  // app.post("/review/add/:gameid", async (req, res) => {
+    // const gameID = req.params.gameid;
+    const username = req.session.user;
+    let userID;
+  
+    try {
+      // Get user data
+      const query1 = `SELECT * FROM users WHERE username = $1;`;
+      const userData = await db.any(query1, [username]);
+  
+      // Check if user data is found
+      if (userData && userData.length > 0) {
+        // Match user id
+        userID = userData[0].userid;
+
+        const query = `INSERT INTO reviews (gameId, userId, userName, rating, reviewText) VALUES ($1, $2, $3, $4, $5);`;
+        await db.any(query, [req.body.gameID, userID, username, req.body.rating, req.body.reviewText]);
+  
+        console.log("Review Added");
+        res.status(200).redirect(`/myReviews`);
+      } else {
+        console.log("User Not Found");
+        res.status(404).send("User not foundjhg");
+      }
+    } catch (err) {
+      console.log("Error adding review:", err);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
+// Route to show all reviews in database
+app.get('/allReviews', async (req, res) => {
+  try {
+    const getAllReviews = 'SELECT * FROM reviews';
+    const allReviews = await db.any(getAllReviews);
+    res.render('pages/allReviews', { reviews: allReviews });
+  } catch (error) {
+    console.error('Error retrieving all reviews:', error);
+    res.render('pages/error', { error: 'Error retrieving reviews.' });
+  }
+});
+
+// // Route to delete your reviews
+// app.get('/deleteReview', (req, res) => {
+//   res.render('pages/deleteReview');
+// });
+
+// // Route to delete a selected review
+// app.post('/deleteReview', async (req, res) => {
+//   const reviewId = req.body.reviewId;
+
+//   try {
+//     const deleteQuery = 'DELETE FROM reviews WHERE reviewid = $1';
+//     await db.none(deleteQuery, [reviewId]);
+
+//     console.log('Review deleted successfully');
+//     res.status(200).redirect('/all-reviews');
+//   } catch (error) {
+//     console.error('Error deleting review:', error);
+//     res.status(500).send('Internal Server Error');
+//   }
+// });
 app.get("/reviews/:gameid", async (req, res) => {
   const gameID = req.params.gameid;
   const data = `fields name;\nsort aggregated_rating desc;\nwhere id=${gameID};`;
@@ -532,6 +628,7 @@ app.post("/addReviews/:gameid", async (req, res) => {
           console.log("Review Not Added");
       });
 });
+
 
 
 

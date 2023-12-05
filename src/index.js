@@ -156,7 +156,7 @@ app.post("/login", async (req, res) => {
               throw new Error("User not found")
           }
           } else {
-              res.redirect("/discover")
+              res.redirect("/home")
           }
       })
       .catch((err) => {

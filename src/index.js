@@ -80,33 +80,55 @@ app.get("/login", (req, res) => {
   res.render("pages/login");
 });
 
-app.get("/discover", (req, res) => {
-  let data =
-  'fields cover.url, id,name,aggregated_rating,genres.name, screenshots.url, storyline ;\nsort aggregated_rating desc;\nwhere cover.url != null & aggregated_rating != null & genres != null & screenshots!=null & storyline != null & age_ratings != null;';
+app.get("/discover", async (req, res) => {
+  try {
+    // Function to make API requests
+    const fetchData = async (data) => {
+      const config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: "https://api.igdb.com/v4/games",
+        headers: {
+          "Client-ID": process.env.TWITCH_CID,
+          Authorization: "Bearer " + process.env.ACCESS_TOKEN,
+          "Content-Type": "text/plain",
+          Cookie:
+            "__cf_bm=8QJ8jiONy6Mtn0esNjAq1dWDKMpRoJSuFwD.GELBeBY-1699991247-0-AVsH85k1GHSbc/QyMLxL41NsnyPCcMewbUmoqYU27SEklnJ+yZp3DmsAJWgoIQf4n8xdepIl4htcY4I65HSmaZQ=",
+        },
+        data: data,
+      };
 
-  let config = {
-    method: "post",
-    maxBodyLength: Infinity,
-    url: "https://api.igdb.com/v4/games",
-    headers: {
-      "Client-ID": process.env.TWITCH_CID,
-      Authorization: "Bearer " + process.env.ACCESS_TOKEN,
-      "Content-Type": "text/plain",
-      Cookie:
-        "__cf_bm=8QJ8jiONy6Mtn0esNjAq1dWDKMpRoJSuFwD.GELBeBY-1699991247-0-AVsH85k1GHSbc/QyMLxL41NsnyPCcMewbUmoqYU27SEklnJ+yZp3DmsAJWgoIQf4n8xdepIl4htcY4I65HSmaZQ=",
-    },
-    data: data,
-  };
-  axios
-    .request(config)
-    .then((response) => {
-      // console.log(JSON.stringify(response.data));
-      res.status(200).render("pages/discover", { games: response.data });
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(500).send("Failure");
+      const response = await axios.request(config);
+      return response.data;
+    };
+
+    // Make API calls for different genres
+    const [discoverResponse, indieGames, adventureGames, platformers] =
+      await Promise.all([
+        fetchData(
+          'fields cover.url,cover.image_id, id,name,aggregated_rating,genres.name, screenshots.url, storyline ; limit 50;\nsort aggregated_rating desc;\nwhere cover.url != null & aggregated_rating != null & genres != null & screenshots!=null & storyline != null & age_ratings != null;'
+        ),
+        fetchData(
+          'fields cover.url,cover.image_id, id,name,aggregated_rating,genres.name, screenshots.url, storyline ; limit 50;\nsort aggregated_rating desc;\nwhere cover.url != null & aggregated_rating != null & genres.name="Indie" & screenshots!=null & storyline != null & age_ratings != null;'
+        ),
+        fetchData(
+          'fields cover.url,cover.image_id, id,name,aggregated_rating,genres.name, screenshots.url, storyline ; limit 50;\nsort aggregated_rating desc;\nwhere cover.url != null & aggregated_rating != null & genres.name="Shooter" & screenshots!=null & storyline != null & age_ratings != null;'
+        ),
+        fetchData(
+          'fields cover.url,cover.image_id, id,name,aggregated_rating,genres.name, screenshots.url, storyline ; limit 50;\nsort aggregated_rating desc;\nwhere cover.url != null & aggregated_rating != null & genres.name="Platform" & screenshots!=null & storyline != null & age_ratings != null;'
+        ),
+      ]);
+
+    res.status(200).render("pages/discover", {
+      games: discoverResponse,
+      indieGames: indieGames,
+      adventureGames: adventureGames,
+      platformers: platformers,
     });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Failure");
+  }
 });
 
 
@@ -264,7 +286,7 @@ app.get('/game/:gameid', (req, res) =>{
   let IGDBData;
 
   let data =
-  `fields age_ratings.content_descriptions.description,cover.url,id,name,aggregated_rating,genres.name, screenshots.url,storyline,summary ;\nsort aggregated_rating desc;\nwhere id=${gameID};`;
+  `fields age_ratings.content_descriptions.description,cover.image_id,id,name,aggregated_rating,genres.name, screenshots.*,storyline,summary ;\nsort aggregated_rating desc;\nwhere id=${gameID};`;
 
   let config = {
     method: "post",
@@ -317,6 +339,49 @@ app.get('/game/:gameid', (req, res) =>{
   // res.render('pages/game', {target: targetData, IGDB: IGDBData});
 });
 
+
+app.get("/search", async (req, res) => {
+  const limit = 500;
+  const requestDataBase =
+    'fields name, genres.name; limit ' + limit + '; where version_parent = null; where aggregated_rating_count > 300; sort aggregated_rating_count desc; where rating != null;';
+
+  const apiRequests = Array.from({ length: 4 }, (_, index) => {
+    const offset = index * limit; // Calculate offset based on index
+    const requestData = `${requestDataBase} offset ${offset};`;
+
+    return axios.post("https://api.igdb.com/v4/games", requestData, {
+      method: "post",
+      maxBodyLength: Infinity,
+      headers: {
+        "Client-ID": process.env.TWITCH_CID,
+        Authorization: "Bearer " + process.env.ACCESS_TOKEN,
+        "Content-Type": "text/plain",
+        Cookie:
+          "__cf_bm=8QJ8jiONy6Mtn0esNjAq1dWDKMpRoJSuFwD.GELBeBY-1699991247-0-AVsH85k1GHSbc/QyMLxL41NsnyPCcMewbUmoqYU27SEklnJ+yZp3DmsAJWgoIQf4n8xdepIl4htcY4I65HSmaZQ=",
+      },
+      data: requestData,
+    });
+  });
+
+  try {
+    const responses = await Promise.all(apiRequests);
+
+    // Combine the data from all API responses
+    const combinedData = responses.reduce((acc, response) => acc.concat(response.data), []);
+
+    // Sort the combined data alphabetically by game name
+    const sortedGames = combinedData.sort((a, b) => {
+      const nameA = a.name.toLowerCase();
+      const nameB = b.name.toLowerCase();
+      return nameA.localeCompare(nameB);
+    });
+
+    res.status(200).render("pages/search", { games: sortedGames });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Failure");
+  }
+});
 app.get('/profile', auth, async (req, res) => {
   try {
     const username = req.session.user; // Assuming the user's username is stored in the session
@@ -404,6 +469,7 @@ app.post('/send-friend-request', auth, async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 //Route for my reviews page
 app.get("/myReviews", async (req, res) => {
@@ -502,7 +568,73 @@ app.get('/allReviews', async (req, res) => {
 //     res.status(500).send('Internal Server Error');
 //   }
 // });
+app.get("/reviews/:gameid", async (req, res) => {
+  const gameID = req.params.gameid;
+  const data = `fields name;\nsort aggregated_rating desc;\nwhere id=${gameID};`;
+  let gameName;
+
+  let config = {
+    method: "post",
+    maxBodyLength: Infinity,
+    url: "https://api.igdb.com/v4/games",
+    headers: {
+      "Client-ID": process.env.TWITCH_CID,
+      Authorization: "Bearer " + process.env.ACCESS_TOKEN,
+      "Content-Type": "text/plain",
+      Cookie:
+        "__cf_bm=8QJ8jiONy6Mtn0esNjAq1dWDKMpRoJSuFwD.GELBeBY-1699991247-0-AVsH85k1GHSbc/QyMLxL41NsnyPCcMewbUmoqYU27SEklnJ+yZp3DmsAJWgoIQf4n8xdepIl4htcY4I65HSmaZQ=",
+    },
+    data: data,
+  };
+  await axios.request(config).then((response) => {
+    console.log(JSON.stringify(response.data));
+    gameName = response.data[0].name;
+  });
+
+  const query = `SELECT * FROM reviews WHERE gameId = $1;`;
+  db.any(query, [gameID])
+      .then(function (data){
+          console.log("Reviews Found", data);
+          res.status(200).render("pages/reviews", {reviews: data, gameID: gameID, gameName: gameName});
+      })
+      .catch(function (err){
+          console.log("Reviews Not Found");
+      });
+  // res.status(200).render("pages/reviews", {gameID: gameID, reviews: [{reviewText: "This game is great", rating: 5, userName: "John Doe"}, {reviewText: "This game is bad", rating: 2, userName: "Jane Doe"}]});
+});
+
+app.post("/addReviews/:gameid", async (req, res) => {
+  const gameID = req.params.gameid;
+  const username = req.session.user;
+  let userID;
+  const review = req.body.review;
+  const rating = req.body.rating;
+  const query1 = `SELECT * FROM users WHERE username = $1;`;
+  await db.any(query1, [username])
+      .then(function (data){
+          console.log("User Found", data);
+          userID = data[0].userid;
+      })
+      .catch(function (err){
+          console.log("User Not Found");
+      });
+  const query = `INSERT INTO reviews (gameId, userId, userName, reviewText, rating) VALUES ($1, $2, $3, $4, $5);`;
+  db.any(query, [gameID, userID, username, review, rating])
+      .then(function (data){
+          console.log("Review Added");
+          res.status(200).redirect(`/reviews/${gameID}`);
+      })
+      .catch(function (err){
+          console.log("Review Not Added");
+      });
+});
+
+
+
+
 
 
   module.exports  = app.listen(3000);
   console.log('Server is listening on port 3000');
+
+  

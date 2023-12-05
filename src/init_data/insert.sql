@@ -3,7 +3,8 @@ INSERT INTO users (username, email, firstName, lastName, password) VALUES
 ('gamerNerd', 'gamernerd@gmail.com', 'Charlie', 'Daniels', 'game4Ever?'),
 ('lol6007', 'noahspony@xbox.com', 'Noah', 'Smith', 'lol6007');
 
-INSERT INTO reviews (gameId, userId, userName, rating, reviewText) VALUES 
-(191406, 1,'LembaMati', 8,'Potal: Great game!'),
-(163826, 2,'gamerNerd', 5,'Blake: Mid'),
-(145439, 3,'lol6007', 1,'Escape Simulator: Worst game ever');
+INSERT INTO reviews (gameId, userId, userName, rating, reviewText) VALUES
+(191406, 1, 'LembaMati', 5, 'This game is awesome!'),
+(191406, 2, 'gamerNerd', 4, 'This game is pretty good.'),
+(191406, 3, 'lol6007', 3, 'This game is okay.');
+

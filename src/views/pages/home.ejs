@@ -1,24 +1,40 @@
 <%- include ('../partials/head') %> <%- include ('../partials/menu') %>
 
-<h1>Home Page</h1>
-<div>
-    <table>
-        <th>
-            <tr>
-                <td>Name</td>
-                <td>Rating</td>
-                <td>Age Rating</td>
-            </tr>
-        </th>
-            <% games.forEach(game => { %>
-                <td>game.name</td>
-                <td>game.aggregated_rating</td>
-                <td><% game.genres.forEach(genre => { %>
-                    <%= `${genre.name}, `%>
-                <% }); %>
-                </td>
-            <% }); %>
-    </table>
-</div>
+<main style="padding-bottom: 100px;">
+    <div style="text-align: center;">
+        <h1 style="align-content: center; font-weight: bolder; font-family: 'Courier New', Courier, monospace; font-size: 46pt; background-color: rgb(222, 135, 163); border-radius: 20%; width: fit-content;">Welcome to PlayPal</h1>
+    </div>
+    <div class="container" style="width: 100vw;">
+        <div id="carouselExampleRide" class="carousel slide container" data-bs-ride="true" style="width: 250vh;">
+            <div class="carousel-inner" style="background-color: rgb(222, 135, 163);">
+            <div class="carousel-item active">
+                <img src="img/HPimg1.webp" class="d-block w-100 carouselImg" alt="Video Game Social Media">
+                <h3 style="font-weight: bolder;">Checkout Your Favorite Games!</h3>
+                <p>Find your favorite games all in one place!</p>
+            </div>
+            <div class="carousel-item">
+                <img src="img/HPimg2.webp" class="d-block w-100 carouselImg" alt="Video Game Characters">
+                <h3 style="font-weight: bolder;">Add Your Voice!</h3>
+                <p>Want to help the next player for the next game? Add your input of how well 
+                    the game went for you and checkout what other people have to say about a game. 
+                    CAUTION: may find new hidden gems that get you hooked for hours!!!</p>
+            </div>
+            <div class="carousel-item">
+                <img src="img/HPimg3.png" class="d-block w-100 carouselImg" alt="Friends and Games">
+                <h5 style="font-weight: bolder;">Connect With Your Friends!</h5>
+                <p>Add your friends to see their reviews, what they're playing, and more.</p>
+            </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleRide" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="false"></span>
+            <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleRide" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="false"></span>
+            <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+      </div>
+</main>
 
 <%- include ('../partials/footer') %>

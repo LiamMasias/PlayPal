@@ -37,5 +37,5 @@ CREATE TABLE savedGames(
   userId INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
   -- gameId INTEGET NOT NULL REFERENCES
   -- shelf is for "which" shelf will be put on, whether that is played, playing, or want to play
-  shelf VARCHAR NOT NULL,
+  shelf VARCHAR NOT NULL
 )

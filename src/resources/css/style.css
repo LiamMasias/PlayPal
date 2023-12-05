@@ -41,3 +41,11 @@
   padding: 1rem 1rem;
   vertical-align: middle;
 }
+
+main {
+  background-image: url(img/background.png);
+}
+
+.carouselImg {
+  height: 741px;
+}

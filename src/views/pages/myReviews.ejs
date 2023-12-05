@@ -12,13 +12,12 @@
         <div class="card mb-3">
           <!-- Game cover on left and game information on right -->
           <div class="row g-0">
-            <div class="col-md-2">
-              <!-- Need to figure out how to get game cover and name -->
-              <img src="<%= review.gameCoverImageUrl %>" class="img-fluid rounded-start" alt="<%= review.name %>">
+            <div class="col-md-1">
+              <img src="<%= review.gameCoverImageUrl %>" class="img-fluid rounded-start" alt="<%= review.gameName %>" style="width: 120px">
             </div>
             <div class="col-md-8">
               <div class="card-body">
-                <h5 class="card-title">Game Name: <%= review.username %></h5>
+                <h5 class="card-title"><%= review.gameName %></h5>
                 <p class="card-text">Rating: <%= review.rating %>/100</p>
                 <p class="card-text">Description: <%= review.reviewtext %></p>
                 <p class="card-text"><small class="text-muted">Created at: <%= review.timecreated %></small></p>

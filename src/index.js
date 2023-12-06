@@ -432,16 +432,19 @@ app.post('/send-friend-request', auth, async (req, res) => {
     }
 
     // Create a new friend request
-    await db.none('INSERT INTO friendships (user_id1, user_id2, status) VALUES ($1, $2, $3)', [
+    const addFriendRequest = await db.none('INSERT INTO friendships (user_id1, user_id2, status) VALUES ($1, $2, $3)', [
       currentUser.userId,
       friend.userId,
       'pending',
     ]);
 
-
+    if(addFriendRequest){
+      console.log("successfully sent a req to ", friend);
+    }
     const friends = await getFriends(user.userId);
-    const friendRequests = await getFriendRequests(user.userId);
-    //res.status(200).json({ message: 'Friend request sent successfully.' });
+    const friendRequests = await getFriendRequests(friend.userId);
+    console.log(friends);
+    console.log(friendRequests);
     res.render('pages/profile', { user , friends, friendRequests});
   } catch (error) {
     console.error('Error sending friend request:', error.message || error);

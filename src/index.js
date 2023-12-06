@@ -438,8 +438,11 @@ app.post('/send-friend-request', auth, async (req, res) => {
       'pending',
     ]);
 
+
+    const friends = await getFriends(user.userId);
+    const friendRequests = await getFriendRequests(user.userId);
     //res.status(200).json({ message: 'Friend request sent successfully.' });
-    res.render('pages/profile', { user });
+    res.render('pages/profile', { user , friends, friendRequests});
   } catch (error) {
     console.error('Error sending friend request:', error.message || error);
     res.status(500).json({ error: 'Internal Server Error' });

@@ -416,7 +416,7 @@ app.post('/send-friend-request', auth, async (req, res) => {
     // Get the current user and friend's username from the form
     const { user } = req.session;
     const { friendUsername } = req.body;
-
+    console.log(friendUsername);
     // Get user IDs for the current user and the friend
     const currentUser = await db.one('SELECT userId FROM users WHERE username = $1', [user]);
     const friend = await db.one('SELECT userId FROM users WHERE username = $1', [friendUsername]);
@@ -438,8 +438,8 @@ app.post('/send-friend-request', auth, async (req, res) => {
       'pending',
     ]);
 
-    res.status(200).json({ message: 'Friend request sent successfully.' });
-    res.render('pages/profile', { user, friends, friendRequests });
+    //res.status(200).json({ message: 'Friend request sent successfully.' });
+    res.render('pages/profile', { user });
   } catch (error) {
     console.error('Error sending friend request:', error.message || error);
     res.status(500).json({ error: 'Internal Server Error' });

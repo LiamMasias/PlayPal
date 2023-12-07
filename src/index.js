@@ -490,11 +490,12 @@ app.get("/myReviews", async (req, res) => {
 
       const query2 = 'SELECT * FROM reviews WHERE reviews.userId = $1';
       const reviewData = await db.any(query2, [userID]);
+      console.log(reviewData);
 
       // Fetch additional information (game picture and name) from IGDB API
       const reviewsWithGameInfo = await Promise.all(
         reviewData.map(async (review) => {
-          const gameInfo = await getGameInfo(review.gameId);
+          const gameInfo = await getGameInfo(review.gameid);
           return { ...review, gameCoverImageUrl: gameInfo.cover.url, gameName: gameInfo.name };
         })
       );
@@ -513,7 +514,7 @@ app.get("/myReviews", async (req, res) => {
 // Function to fetch game information from IGDB API
 async function getGameInfo(gameId) {
   let data =
-  'fields cover.url, id,name,aggregated_rating,genres.name, screenshots.url, storyline ;\nsort aggregated_rating desc;\nwhere cover.url != null & aggregated_rating != null & genres != null & screenshots!=null & storyline != null & age_ratings != null;';
+  `fields cover.url, id,name,aggregated_rating,genres.name, screenshots.url, storyline ;\nsort aggregated_rating desc;\nwhere id=${gameId};`;
   const config = {
     method: "post",
     maxBodyLength: Infinity,

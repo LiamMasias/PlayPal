@@ -26,13 +26,13 @@ const createFriendshipsTable = `
   );
 `;
 
-db.none(createFriendshipsTable)
-  .then(() => {
-    console.log('Friendships table created successfully');
-  })
-  .catch((error) => {
-    console.error('Error creating friendships table:', error.message || error);
-  });
+// db.none(createFriendshipsTable)
+//   .then(() => {
+//     console.log('Friendships table created successfully');
+//   })
+//   .catch((error) => {
+//     console.error('Error creating friendships table:', error.message || error);
+//   });
 
 // test your database
 db.connect()
@@ -368,10 +368,10 @@ app.get('/profile', auth, async (req, res) => {
     }
 
     // Render the profile page with user data
-    const friends = await getFriends(user.userId);
-    const friendRequests = await getFriendRequests(user.userId);
+    //const friends = await getFriends(user.userId);
+    //const friendRequests = await getFriendRequests(user.userId);
 
-    res.render('pages/profile', { user, friends, friendRequests });
+    res.render('pages/profile', { user });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -379,72 +379,72 @@ app.get('/profile', auth, async (req, res) => {
 });
 
 //helper fcn for getting friendfs
-async function getFriends(userId) {
-  try {
-    const query = `
-      SELECT users.*
-      FROM users
-      JOIN friendships ON users.userId = friendships.user_id2
-      WHERE friendships.user_id1 = $1 AND friendships.status = 'accepted';
-    `;
-    const friends = await db.any(query, [userId]);
-    return friends;
-  } catch (err) {
-    console.error(err);
-    return [];
-  }
-}
-//helper fcn for grabbing friend reqs
-async function getFriendRequests(userId) {
-  try {
-    const query = `
-      SELECT users.*
-      FROM users
-      JOIN friendships ON users.userId = friendships.user_id1
-      WHERE friendships.user_id2 = $1 AND friendships.status = 'pending';
-    `;
-    const friendRequests = await db.any(query, [userId]);
-    return friendRequests;
-  } catch (err) {
-    console.error(err);
-    return [];
-  }
-}
+// async function getFriends(userId) {
+//   try {
+//     const query = `
+//       SELECT users.*
+//       FROM users
+//       JOIN friendships ON users.userId = friendships.user_id2
+//       WHERE friendships.user_id1 = $1 AND friendships.status = 'accepted';
+//     `;
+//     const friends = await db.any(query, [userId]);
+//     return friends;
+//   } catch (err) {
+//     console.error(err);
+//     return [];
+//   }
+// }
+// //helper fcn for grabbing friend reqs
+// async function getFriendRequests(userId) {
+//   try {
+//     const query = `
+//       SELECT users.*
+//       FROM users
+//       JOIN friendships ON users.userId = friendships.user_id1
+//       WHERE friendships.user_id2 = $1 AND friendships.status = 'pending';
+//     `;
+//     const friendRequests = await db.any(query, [userId]);
+//     return friendRequests;
+//   } catch (err) {
+//     console.error(err);
+//     return [];
+//   }
+// }
 
-app.post('/send-friend-request', auth, async (req, res) => {
-  try {
-    // Get the current user and friend's username from the form
-    const { user } = req.session;
-    const { friendUsername } = req.body;
+// app.post('/send-friend-request', auth, async (req, res) => {
+//   try {
+//     // Get the current user and friend's username from the form
+//     const { user } = req.session;
+//     const { friendUsername } = req.body;
 
-    // Get user IDs for the current user and the friend
-    const currentUser = await db.one('SELECT userId FROM users WHERE username = $1', [user]);
-    const friend = await db.one('SELECT userId FROM users WHERE username = $1', [friendUsername]);
+//     // Get user IDs for the current user and the friend
+//     const currentUser = await db.one('SELECT userId FROM users WHERE username = $1', [user]);
+//     const friend = await db.one('SELECT userId FROM users WHERE username = $1', [friendUsername]);
 
-    // Check if a friend request already exists
-    const existingRequest = await db.oneOrNone(
-      'SELECT * FROM friendships WHERE (user_id1 = $1 AND user_id2 = $2) OR (user_id1 = $2 AND user_id2 = $1)',
-      [currentUser.userId, friend.userId]
-    );
+//     // Check if a friend request already exists
+//     const existingRequest = await db.oneOrNone(
+//       'SELECT * FROM friendships WHERE (user_id1 = $1 AND user_id2 = $2) OR (user_id1 = $2 AND user_id2 = $1)',
+//       [currentUser.userId, friend.userId]
+//     );
 
-    if (existingRequest) {
-      return res.status(400).json({ error: 'Friend request already sent or received.' });
-    }
+//     if (existingRequest) {
+//       return res.status(400).json({ error: 'Friend request already sent or received.' });
+//     }
 
-    // Create a new friend request
-    await db.none('INSERT INTO friendships (user_id1, user_id2, status) VALUES ($1, $2, $3)', [
-      currentUser.userId,
-      friend.userId,
-      'pending',
-    ]);
+//     // Create a new friend request
+//     await db.none('INSERT INTO friendships (user_id1, user_id2, status) VALUES ($1, $2, $3)', [
+//       currentUser.userId,
+//       friend.userId,
+//       'pending',
+//     ]);
 
-    res.status(200).json({ message: 'Friend request sent successfully.' });
-    res.render('pages/profile', { user, friends, friendRequests });
-  } catch (error) {
-    console.error('Error sending friend request:', error.message || error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
+//     res.status(200).json({ message: 'Friend request sent successfully.' });
+//     res.render('pages/profile', { user, friends, friendRequests });
+//   } catch (error) {
+//     console.error('Error sending friend request:', error.message || error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
 
 // //Route for my reviews page
 // app.get("/myReviews", async (req, res) => {
@@ -492,7 +492,6 @@ app.get("/myReviews", async (req, res) => {
       const reviewData = await db.any(query2, [userID]);
       console.log(reviewData);
 
-      // Fetch additional information (game picture and name) from IGDB API
       const reviewsWithGameInfo = await Promise.all(
         reviewData.map(async (review) => {
           const gameInfo = await getGameInfo(review.gameid);
@@ -511,10 +510,11 @@ app.get("/myReviews", async (req, res) => {
   }
 });
 
-// Function to fetch game information from IGDB API
+//Helper function to get game cover and name from gameId
 async function getGameInfo(gameId) {
   let data =
   `fields cover.url, id,name,aggregated_rating,genres.name, screenshots.url, storyline ;\nsort aggregated_rating desc;\nwhere id=${gameId};`;
+
   const config = {
     method: "post",
     maxBodyLength: Infinity,
@@ -585,26 +585,26 @@ app.get('/allReviews', async (req, res) => {
   }
 });
 
-// // Route to delete your reviews
-// app.get('/deleteReview', (req, res) => {
-//   res.render('pages/deleteReview');
-// });
+// Route to delete your reviews
+app.get('/deleteReview', (req, res) => {
+  res.render('my/Reviews');
+});
 
-// // Route to delete a selected review
-// app.post('/deleteReview', async (req, res) => {
-//   const reviewId = req.body.reviewId;
+// Route to delete a selected review
+app.post('/deleteReview', async (req, res) => {
+  const reviewId = req.body.reviewId;
 
-//   try {
-//     const deleteQuery = 'DELETE FROM reviews WHERE reviewid = $1';
-//     await db.none(deleteQuery, [reviewId]);
+  try {
+    const deleteQuery = 'DELETE FROM reviews WHERE reviewid = $1';
+    await db.none(deleteQuery, [reviewId]);
 
-//     console.log('Review deleted successfully');
-//     res.status(200).redirect('/all-reviews');
-//   } catch (error) {
-//     console.error('Error deleting review:', error);
-//     res.status(500).send('Internal Server Error');
-//   }
-// });
+    console.log('Review deleted successfully');
+    res.status(200).redirect('/myReviews');
+  } catch (error) {
+    console.error('Error deleting review:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 app.get("/reviews/:gameid", async (req, res) => {
   const gameID = req.params.gameid;
   const data = `fields name;\nsort aggregated_rating desc;\nwhere id=${gameID};`;

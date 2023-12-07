@@ -491,7 +491,6 @@ app.get("/myReviews", async (req, res) => {
       const query2 = 'SELECT * FROM reviews WHERE reviews.userId = $1';
       const reviewData = await db.any(query2, [userID]);
 
-      // Fetch additional information (game picture and name) from IGDB API
       const reviewsWithGameInfo = await Promise.all(
         reviewData.map(async (review) => {
           const gameInfo = await getGameInfo(review.gameId);
@@ -510,10 +509,11 @@ app.get("/myReviews", async (req, res) => {
   }
 });
 
-// Function to fetch game information from IGDB API
+//Helper function to get game cover and name from gameId
 async function getGameInfo(gameId) {
   let data =
   'fields cover.url, id,name,aggregated_rating,genres.name, screenshots.url, storyline ;\nsort aggregated_rating desc;\nwhere cover.url != null & aggregated_rating != null & genres != null & screenshots!=null & storyline != null & age_ratings != null;';
+  //`fields cover.url, id, name'\nwhere id=${gameId};`;
   const config = {
     method: "post",
     maxBodyLength: Infinity,
@@ -584,26 +584,26 @@ app.get('/allReviews', async (req, res) => {
   }
 });
 
-// // Route to delete your reviews
-// app.get('/deleteReview', (req, res) => {
-//   res.render('pages/deleteReview');
-// });
+// Route to delete your reviews
+app.get('/deleteReview', (req, res) => {
+  res.render('my/Reviews');
+});
 
-// // Route to delete a selected review
-// app.post('/deleteReview', async (req, res) => {
-//   const reviewId = req.body.reviewId;
+// Route to delete a selected review
+app.post('/deleteReview', async (req, res) => {
+  const reviewId = req.body.reviewId;
 
-//   try {
-//     const deleteQuery = 'DELETE FROM reviews WHERE reviewid = $1';
-//     await db.none(deleteQuery, [reviewId]);
+  try {
+    const deleteQuery = 'DELETE FROM reviews WHERE reviewid = $1';
+    await db.none(deleteQuery, [reviewId]);
 
-//     console.log('Review deleted successfully');
-//     res.status(200).redirect('/all-reviews');
-//   } catch (error) {
-//     console.error('Error deleting review:', error);
-//     res.status(500).send('Internal Server Error');
-//   }
-// });
+    console.log('Review deleted successfully');
+    res.status(200).redirect('/myReviews');
+  } catch (error) {
+    console.error('Error deleting review:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 app.get("/reviews/:gameid", async (req, res) => {
   const gameID = req.params.gameid;
   const data = `fields name;\nsort aggregated_rating desc;\nwhere id=${gameID};`;

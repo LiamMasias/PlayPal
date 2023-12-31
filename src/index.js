@@ -381,101 +381,101 @@ app.get('/profile', auth, async (req, res) => {
 // FRIENDS TABLING. FUTURE ENHANCEMENT
 
 //helper fcn for getting friendfs
-// async function getFriends(userId) {
-//   try {
-//     const query = `
-//       SELECT users.*
-//       FROM users
-//       JOIN friendships ON users.userId = friendships.user_id2
-//       WHERE friendships.user_id1 = $1 AND friendships.status = 'accepted';
-//     `;
-//     const friends = await db.any(query, [userId]);
-//     return friends;
-//   } catch (err) {
-//     console.error(err);
-//     return [];
-//   }
-// }
-// //helper fcn for grabbing friend reqs
-// async function getFriendRequests(userId) {
-//   try {
-//     const query = `
-//       SELECT users.*
-//       FROM users
-//       JOIN friendships ON users.userId = friendships.user_id1
-//       WHERE friendships.user_id2 = $1 AND friendships.status = 'pending';
-//     `;
-//     const friendRequests = await db.any(query, [userId]);
-//     return friendRequests;
-//   } catch (err) {
-//     console.error(err);
-//     return [];
-//   }
-// }
+async function getFriends(userId) {
+  try {
+    const query = `
+      SELECT users.*
+      FROM users
+      JOIN friendships ON users.userId = friendships.user_id2
+      WHERE friendships.user_id1 = $1 AND friendships.status = 'accepted';
+    `;
+    const friends = await db.any(query, [userId]);
+    return friends;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+}
+//helper fcn for grabbing friend reqs
+async function getFriendRequests(userId) {
+  try {
+    const query = `
+      SELECT users.*
+      FROM users
+      JOIN friendships ON users.userId = friendships.user_id1
+      WHERE friendships.user_id2 = $1 AND friendships.status = 'pending';
+    `;
+    const friendRequests = await db.any(query, [userId]);
+    return friendRequests;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+}
 
-// app.post('/send-friend-request', auth, async (req, res) => {
-//   try {
-//     // Get the current user and friend's username from the form
-//     const { user } = req.session;
-//     const { friendUsername } = req.body;
+app.post('/send-friend-request', auth, async (req, res) => {
+  try {
+    // Get the current user and friend's username from the form
+    const { user } = req.session;
+    const { friendUsername } = req.body;
 
-//     // Get user IDs for the current user and the friend
-//     const currentUser = await db.one('SELECT userId FROM users WHERE username = $1', [user]);
-//     const friend = await db.one('SELECT userId FROM users WHERE username = $1', [friendUsername]);
+    // Get user IDs for the current user and the friend
+    const currentUser = await db.one('SELECT userId FROM users WHERE username = $1', [user]);
+    const friend = await db.one('SELECT userId FROM users WHERE username = $1', [friendUsername]);
 
-//     // Check if a friend request already exists
-//     const existingRequest = await db.oneOrNone(
-//       'SELECT * FROM friendships WHERE (user_id1 = $1 AND user_id2 = $2) OR (user_id1 = $2 AND user_id2 = $1)',
-//       [currentUser.userId, friend.userId]
-//     );
+    // Check if a friend request already exists
+    const existingRequest = await db.oneOrNone(
+      'SELECT * FROM friendships WHERE (user_id1 = $1 AND user_id2 = $2) OR (user_id1 = $2 AND user_id2 = $1)',
+      [currentUser.userId, friend.userId]
+    );
 
-//     if (existingRequest) {
-//       return res.status(400).json({ error: 'Friend request already sent or received.' });
-//     }
+    if (existingRequest) {
+      return res.status(400).json({ error: 'Friend request already sent or received.' });
+    }
 
-//     // Create a new friend request
-//     await db.none('INSERT INTO friendships (user_id1, user_id2, status) VALUES ($1, $2, $3)', [
-//       currentUser.userId,
-//       friend.userId,
-//       'pending',
-//     ]);
+    // Create a new friend request
+    await db.none('INSERT INTO friendships (user_id1, user_id2, status) VALUES ($1, $2, $3)', [
+      currentUser.userId,
+      friend.userId,
+      'pending',
+    ]);
 
-//     res.status(200).json({ message: 'Friend request sent successfully.' });
-//     res.render('pages/profile', { user, friends, friendRequests });
-//   } catch (error) {
-//     console.error('Error sending friend request:', error.message || error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// });
+    res.status(200).json({ message: 'Friend request sent successfully.' });
+    res.render('pages/profile', { user, friends, friendRequests });
+  } catch (error) {
+    console.error('Error sending friend request:', error.message || error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
-// //Route for my reviews page
-// app.get("/myReviews", async (req, res) => {
-//   const username = req.session.user;
-//   let userID;
-//   try {
-//     const query1 = `SELECT * FROM users WHERE username = $1;`;
-//     const userData = await db.any(query1, [username]);
+//Route for my reviews page
+app.get("/myReviews", async (req, res) => {
+  const username = req.session.user;
+  let userID;
+  try {
+    const query1 = `SELECT * FROM users WHERE username = $1;`;
+    const userData = await db.any(query1, [username]);
 
-//     // Check if user data is found
-//     if (userData && userData.length > 0) {
-//       // Match user id
-//       userID = userData[0].userid;
+    // Check if user data is found
+    if (userData && userData.length > 0) {
+      // Match user id
+      userID = userData[0].userid;
 
-//       const query2 = 'SELECT * FROM reviews WHERE reviews.userId = $1';
-//       const reviewData = await db.any(query2, [userID]);
+      const query2 = 'SELECT * FROM reviews WHERE reviews.userId = $1';
+      const reviewData = await db.any(query2, [userID]);
 
-//       console.log("Here is the reviewData:", reviewData);
+      console.log("Here is the reviewData:", reviewData);
 
-//       res.status(200).render('pages/myReviews', { reviews: reviewData });
-//     } else {
-//       console.log("User Not Found");
-//       res.status(404).send("User not found");
-//     }
-//   } catch (err) {
-//     console.log("Error fetching reviews:", err);
-//     res.status(500).send('Internal Server Error');
-//   }
-// });
+      res.status(200).render('pages/myReviews', { reviews: reviewData });
+    } else {
+      console.log("User Not Found");
+      res.status(404).send("User not found");
+    }
+  } catch (err) {
+    console.log("Error fetching reviews:", err);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 //Route for my reviews page
 app.get("/myReviews", async (req, res) => {

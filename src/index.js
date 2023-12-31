@@ -378,6 +378,8 @@ app.get('/profile', auth, async (req, res) => {
   }
 });
 
+// FRIENDS TABLING. FUTURE ENHANCEMENT
+
 //helper fcn for getting friendfs
 // async function getFriends(userId) {
 //   try {

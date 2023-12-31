@@ -368,8 +368,8 @@ app.get('/profile', auth, async (req, res) => {
     }
 
     // Render the profile page with user data
-    //const friends = await getFriends(user.userId);
-    //const friendRequests = await getFriendRequests(user.userId);
+    const friends = await getFriends(user.userId);
+    const friendRequests = await getFriendRequests(user.userId);
 
     res.render('pages/profile', { user });
   } catch (err) {

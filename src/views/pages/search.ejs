@@ -1,0 +1,33 @@
+<%- include ('../partials/head') %>
+<%- include ('../partials/menu') %>
+
+<main>
+
+
+    <table class="table" style="background-color: white;">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Genres</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% games.forEach(game => { %>
+          <tr>
+            <td><a href="/game/<%= game.id %>" ><%= game.name %></a></td>
+            <td>
+              <% if (game.genres && game.genres.length) { %>
+                <% game.genres.forEach((genre, index) => { %>
+                  <%= `${genre.name}${index < game.genres.length - 1 ? ',' : ''} ` %>
+                <% }); %>
+              <% } else { %>
+                No genres available
+              <% } %>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <%- include ('../partials/footer') %>

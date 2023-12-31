@@ -15,49 +15,67 @@
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-body">
+      <!-- Commenting out friend requests for presentation, FUTURE ENHANCEMENT -->
+      <!-- <div class="card">
+        <div class="card-body"> -->
           <!-- friend list display -->
-          <h5 class="card-title">Friends</h5>
-          <% if (friends && friends.length > 0) { %>
+          <!-- <h5 class="card-title">Friends</h5>
+          <%# if (friends && friends.length > 0) { %>
             <ul class="list-group">
-              <% friends.forEach(friend => { %>
-                <li class="list-group-item"><%= friend.username %></li>
-              <% }); %>
+              <%# friends.forEach(friend => { %>
+                <li class="list-group-item"><%#= friend.username %></li>
+              <%# }); %>
             </ul>
-          <% } else { %>
+          <%# } else { %>
             <p class="card-text">No friends yet.</p>
-          <% } %>
+          <%# } %> -->
           <!-- Friend Requests card -->
-          <div class="card mt-4">
+          <!-- <div class="card mt-4">
             <div class="card-body">
               <h5 class="card-title">Friend Requests</h5>
-              <% if (user.friendRequests && user.friendRequests.length > 0) { %>
+              <%# if (user.friendRequests && user.friendRequests.length > 0) { %>
                 <ul class="list-group">
-                  <% user.friendRequests.forEach(request => { %>
+                  <%# user.friendRequests.forEach(request => { %>
                     <li class="list-group-item">
-                      <%= request.username %> has sent you a friend request.
+                      <%# = request.username %> has sent you a friend request. -->
                       <!-- Add form to accept/reject friend request -->
-                    </li>
-                  <% }); %>
+                    <!-- </li>
+                  <%# }); %>
                 </ul>
-              <% } else { %>
+              <%# } else { %>
                 <p class="card-text">No friend requests.</p>
-              <% } %>
+              <%# } %>
             </div>
+          </div> -->
+      
+    </div> 
+    <div class="col-md-6">
+      <!-- My Saved Games -->
+      <!-- Commented out Saved games for presentation. FUTURE DEVELOPMENT!!!! -->
+      <!-- <h1>Saved Games</h1>
+      <div class="card-group">
+        <div class="card">
+          <img style="background-color: red;" src="/img/TrophyIcon.png" class="card-img-top" alt="Trophy Icon">
+          <div class="card-body">
+            <h5 class="card-title">Played</h5>
+            <p class="card-text">Show your friends of the games you triumphed and keep track of your gaming achievements!</p>
           </div>
-
-          <!-- Send Friend Request Form -->
-          <form action="/send-friend-request" method="POST">
-            <div class="form-group">
-              <label for="friendUsername">Friend's Username</label>
-              <input type="text" class="form-control" id="friendUsername" name="friendUsername" required>
-            </div>
-            <button type="submit" class="btn btn-primary mt-2">Send Friend Request</button>
-          </form>
-
         </div>
-      </div>
+        <div class="card">
+          <img style="background-color: green;" src="img/SaveIcon.png" class="card-img-top" alt="Save Icon">
+          <div class="card-body">
+            <h5 class="card-title">Currently Playing</h5>
+            <p class="card-text">Your current titles that you are working on, maybe you can find some friends to accompany you on your journey! It's too dangerous to go alone.</p>
+          </div>
+        </div>
+        <div class="card">
+          <img style="background-color: blue;" src="img/WishlistIcon.png" class="card-img-top" alt="Wishlist Icon">
+          <div class="card-body">
+            <h5 class="card-title">Want to Play</h5>
+            <p class="card-text">A wish list to keep track of, especially of titles you may have never heard before and may not find it again! Hidden gems are always the best!</p>
+          </div>
+        </div>
+      </div> -->
     </div>
   </div>
 </main>

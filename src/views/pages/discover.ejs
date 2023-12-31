@@ -9,7 +9,7 @@
         <% games.forEach(game => { %>
           <div style="flex: 1; white-space: normal; margin-right: 10px;">
             <div class="card" style="width: 18rem; display: flex; flex-direction: column; height: 100%;">
-              <img src="<%= game.cover.url %>" class="card-img-top" alt="<%= game.name %>"/>
+              <img src="<%= 'https://images.igdb.com/igdb/image/upload/t_cover_big/' + game.cover.image_id + '.jpg' %>" class="card-img-top" alt="<%= game.name %>"/>
               <div class="card-body" style="flex: 1;">
                 <h5 class="card-title"><%= game.name %></h5>
                 <p class="card-text" style="flex: 1;">
@@ -17,7 +17,7 @@
                   `${genre.name}${index < game.genres.length - 1 ? ',' : ''} ` %>
                   <% }); %>
                 </p>
-                <a href="http://localhost:3000/game/<%= game.id %>" class="btn btn-primary" style="position: relative;">View Game</a>
+                <a href="/game/<%= game.id %>" class="btn btn-primary" style="position: relative;">View Game</a>
               </div>
             </div>
           </div>
@@ -28,12 +28,13 @@
     <div id = "partition" style = "height: 60px;"></div>
 
     <div class="container">
-      <h1>Recent </h1>
+      <h1>Indie</h1>
       <div class="fixed-size-container" style="width: 100%; display: flex; overflow-x: auto; box-sizing: border-box;">
         <div class="hide-scrollbar overflow-x-scroll" style="white-space: nowrap; display: flex;">
-          <% games.forEach(game => { %>
+          <% indieGames.forEach(game => { %>
             <div style="flex: 1; white-space: normal; margin-right: 10px;">
               <div class="card" style="width: 18rem; display: flex; flex-direction: column; height: 100%;">
+                <img src="<%= 'https://images.igdb.com/igdb/image/upload/t_cover_big/' + game.cover.image_id + '.jpg' %>" class="card-img-top" alt="<%= game.name %>"/>
                 <div class="card-body" style="flex: 1;">
                   <h5 class="card-title"><%= game.name %></h5>
                   <p class="card-text" style="flex: 1;">
@@ -41,12 +42,64 @@
                     `${genre.name}${index < game.genres.length - 1 ? ',' : ''} ` %>
                     <% }); %>
                   </p>
-                  <a href="http://localhost:3000/game/<%= game.id %>" class="btn btn-primary" style="position: relative;">Go somewhere</a>
+                  <a href="/game/<%= game.id %>" class="btn btn-primary" style="position: relative;">View Game</a>
                 </div>
               </div>
             </div>
           <% }); %>
         </div>
       </div>
+  
+      <div id = "partition" style = "height: 60px;"></div>
+
+      <div class="container">
+        <h1>Shooters</h1>
+        <div class="fixed-size-container" style="width: 100%; display: flex; overflow-x: auto; box-sizing: border-box;">
+          <div class="hide-scrollbar overflow-x-scroll" style="white-space: nowrap; display: flex;">
+            <% adventureGames.forEach(game => { %>
+              <div style="flex: 1; white-space: normal; margin-right: 10px;">
+                <div class="card" style="width: 18rem; display: flex; flex-direction: column; height: 100%;">
+                  <img src="<%= 'https://images.igdb.com/igdb/image/upload/t_cover_big/' + game.cover.image_id + '.jpg' %>" class="card-img-top" alt="<%= game.name %>"/>
+                  <div class="card-body" style="flex: 1;">
+                    <h5 class="card-title"><%= game.name %></h5>
+                    <p class="card-text" style="flex: 1;">
+                      <% game.genres.forEach((genre, index) => { %> <%=
+                      `${genre.name}${index < game.genres.length - 1 ? ',' : ''} ` %>
+                      <% }); %>
+                    </p>
+                    <a href="/game/<%= game.id %>" class="btn btn-primary" style="position: relative;">View Game</a>
+                  </div>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+        </div>
+    
+        <div id = "partition" style = "height: 60px;"></div>
+
+        <div class="container">
+          <h1>Platformers</h1>
+          <div class="fixed-size-container" style="width: 100%; display: flex; overflow-x: auto; box-sizing: border-box;">
+            <div class="hide-scrollbar overflow-x-scroll" style="white-space: nowrap; display: flex;">
+              <% platformers.forEach(game => { %>
+                <div style="flex: 1; white-space: normal; margin-right: 10px;">
+                  <div class="card" style="width: 18rem; display: flex; flex-direction: column; height: 100%;">
+                    <img src="<%= 'https://images.igdb.com/igdb/image/upload/t_cover_big/' + game.cover.image_id + '.jpg' %>" class="card-img-top" alt="<%= game.name %>"/>
+                    <div class="card-body" style="flex: 1;">
+                      <h5 class="card-title"><%= game.name %></h5>
+                      <p class="card-text" style="flex: 1;">
+                        <% game.genres.forEach((genre, index) => { %> <%=
+                        `${genre.name}${index < game.genres.length - 1 ? ',' : ''} ` %>
+                        <% }); %>
+                      </p>
+                      <a href="/game/<%= game.id %>" class="btn btn-primary" style="position: relative;">View Game</a>
+                    </div>
+                  </div>
+                </div>
+              <% }); %>
+            </div>
+          </div>
+      
+          <div id = "partition" style = "height: 60px;"></div>
 
 <%- include ('../partials/footer') %>

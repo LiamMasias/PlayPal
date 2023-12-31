@@ -1,0 +1,32 @@
+<%- include ('../partials/head') %>
+<%- include ('../partials/menu') %>
+
+<main>
+  <div class="container">
+    <h1>All Reviews</h1> 
+    <% if (reviews.length > 0) { %>
+      <% reviews.forEach(review => { %>
+        <div class="card mb-3">
+          <div class="row g-0">
+            <div class="col-md-2">
+              <!-- Figure out how to get game cover and game name -->
+              <img src="<%= review.gameCoverImageUrl %>" class="img-fluid rounded-start" alt="<%= review.gameName %>">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title">Game Name: <%= review.username %></h5>
+                <p class="card-text">Rating: <%= review.rating %>/100</p>
+                <p class="card-text">Description: <%= review.reviewtext %></p>
+                <p class="card-text"><small class="text-muted">Created at: <%= review.timecreated %></small></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    <% } else { %>
+      <p>No reviews found.</p>
+    <% } %>
+  </div>
+</main>
+
+<%- include ('../partials/footer') %>

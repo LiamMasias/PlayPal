@@ -26,13 +26,13 @@ const createFriendshipsTable = `
   );
 `;
 
-// db.none(createFriendshipsTable)
-//   .then(() => {
-//     console.log('Friendships table created successfully');
-//   })
-//   .catch((error) => {
-//     console.error('Error creating friendships table:', error.message || error);
-//   });
+db.none(createFriendshipsTable)
+  .then(() => {
+    console.log('Friendships table created successfully');
+  })
+  .catch((error) => {
+    console.error('Error creating friendships table:', error.message || error);
+  });
 
 // test your database
 db.connect()

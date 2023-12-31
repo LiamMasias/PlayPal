@@ -371,7 +371,7 @@ app.get('/profile', auth, async (req, res) => {
     const friends = await getFriends(user.userId);
     const friendRequests = await getFriendRequests(user.userId);
 
-    res.render('pages/profile', { user });
+    res.render('pages/profile', { user, friends, friendRequests});
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });

@@ -463,35 +463,6 @@ app.get("/myReviews", async (req, res) => {
 
       const query2 = 'SELECT * FROM reviews WHERE reviews.userId = $1';
       const reviewData = await db.any(query2, [userID]);
-
-      console.log("Here is the reviewData:", reviewData);
-
-      res.status(200).render('pages/myReviews', { reviews: reviewData });
-    } else {
-      console.log("User Not Found");
-      res.status(404).send("User not found");
-    }
-  } catch (err) {
-    console.log("Error fetching reviews:", err);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
-//Route for my reviews page
-app.get("/myReviews", async (req, res) => {
-  const username = req.session.user;
-  let userID;
-  try {
-    const query1 = `SELECT * FROM users WHERE username = $1;`;
-    const userData = await db.any(query1, [username]);
-
-    // Check if user data is found
-    if (userData && userData.length > 0) {
-      // Match user id
-      userID = userData[0].userid;
-
-      const query2 = 'SELECT * FROM reviews WHERE reviews.userId = $1';
-      const reviewData = await db.any(query2, [userID]);
       console.log(reviewData);
 
       const reviewsWithGameInfo = await Promise.all(

@@ -1,6 +1,7 @@
 main {
   min-height: 100vh;
   min-width: 100vw;
+  background-image: url(../img/background.png);
 }
 
 .center {
@@ -60,10 +61,6 @@ main {
   display: inline-block;
   padding: 1rem 1rem;
   vertical-align: middle;
-}
-
-main {
-  background-image: url(../img/background.png);
 }
 
 .carouselImg {

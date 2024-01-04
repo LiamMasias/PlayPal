@@ -11,6 +11,21 @@
   color: white;
 }
 
+.saveGameButton{
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+}
+.saveGameButtonImg{
+  border-radius: 50%;
+}
+
+.discoverHeader{
+  background-color: rgb(171, 170, 170);
+  border-radius: 20%;
+  width: fit-content;
+}
+
 .navigationItem{
   border-radius: 25%;
   width: 80px;

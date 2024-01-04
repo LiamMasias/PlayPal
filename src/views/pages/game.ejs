@@ -124,21 +124,37 @@
           </h2>
         </div>
 
-        <div class="Platforms col-md-6">
+        <div class="Platforms col-md-6 row">
           <h1>Available Platforms:</h1>
-          <!-- <h2>
-            <a  class="btn btn-danger" href="https://www.target.com/s?searchTerm=<%= IGDB[0].name %>"
-              >Target</a
-            >
-          </h2>
-          <h2>
-            <a  class="btn btn-danger" href="https://www.amazon.com/s?k=<%= IGDB[0].name %>">Amazon</a>
-          </h2>
-          <h2>
-            <a  class="btn btn-danger" href="https://www.gamestop.com/search/?q=<%= IGDB[0].name %>"
-              >GameStop</a
-            >
-          </h2> -->
+          <!-- Need to have ejs statement to see if platform is true for each. If has playstation, include this, if xbox, etc...: -->
+          <div class="col-md-3">
+            <h2>
+              <a  class="btn" href="https://www.playstation.com/en-us/search/?q=<%= IGDB[0].name %>"
+                ><img class="saveGameButton" src="/img/playstation.svg" alt="Playstation Store URL"></a
+              >
+            </h2>
+          </div>
+          <div class="col-md-3">
+            <h2>
+              <a  class="btn" href="https://www.xbox.com/en-us/search/?q=<%= IGDB[0].name %>"
+                ><img class="saveGameButton" src="/img/xbox.png" alt="Xbox Store URL"></a
+              >
+            </h2>
+          </div>
+          <div class="col-md-3">
+            <h2>
+              <a  class="btn" href="https://store.steampowered.com/search/?term=<%= IGDB[0].name %>"
+                ><img class="saveGameButton" src="/img/Steam.png" alt="Steam Store URL"></a
+              >
+            </h2>
+          </div>
+          <div class="col-md-3">
+            <h2>
+              <a  class="btn" href="https://www.nintendo.com/us/search/#q=<%= IGDB[0].name %>"
+                ><img class="saveGameButton" src="/img/Nintendo.svg" alt="Steam Store URL"></a
+              >
+            </h2>
+          </div>
         </div>
     </div>
   

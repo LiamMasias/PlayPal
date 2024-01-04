@@ -1,0 +1,60 @@
+<%- include ('../partials/head') %> <%- include ('../partials/menu') %>
+
+<main>
+  <div>
+    <!-- List of game reviews goes here -->
+    <h1 style="text-align: center;">Reviews for <a href="/game/<%=gameID %>"><%= gameName %></a></h1>
+    <h5 style="text-align: center;">
+        <% if (reviews.length === 0) { %>
+            No reviews yet!
+        <% } else { %>
+        Average User rating: <%= (((reviews.reduce((acc, curr) => acc + curr.rating, 0)) / reviews.length).toFixed(2)) %> &#9733;s
+        <% } %>
+    </h5>
+
+    <form method="POST" action="/addReviews/<%= gameID %>" style="margin-left: 20%; width: 60%;">
+        <input
+          type= "text"
+          name="review"
+          placeholder="Add a review..."
+          class="form-control"
+          style="overflow-wrap: break-word;"
+        />
+        <input
+          type="number"
+          name="rating"
+          placeholder="Rating (1-5)"
+          class="form-control"
+        />
+        <button type="submit" class="btn btn-primary" style="margin-left: 45%; width: 10%;">Submit</button>
+    </form>
+
+    <div id="review-container" style="margin-left: 20%;">
+      <div class="card-deck" >
+        <% reviews.forEach((review, index) => { %>
+            <div id = "whitespace" style="height: 5px;"></div>
+
+        <div class="card" style="width: 75%; ">
+            <div class="card-body" >
+                <h5 class="card-title" style="border-bottom: 1px solid black;"><%= review.username %></h5>
+                <p class="card-text"><%= review.reviewtext %></p>
+                <div>
+                    <p class="card-text">Rating: <%= review.rating %> 
+                      <% for (let i = 0; i < review.rating; i++) { %>
+                        &#9733;
+                      <% } %>
+                    </p>
+                  </div>
+            </div>
+            
+        </div>
+        <% }); %>
+      </div>
+    </div>
+  </div>
+
+  <div id = "whitespace" style="height: 70px;"></div>
+  
+</main>
+
+<%- include ('../partials/footer') %>

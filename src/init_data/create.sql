@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users(
     userId SERIAL PRIMARY KEY,
     email VARCHAR(50) NOT NULL,
-    username VARCHAR(50) NOT NULL,
+    username VARCHAR(50) NOT NULL UNIQUE,
     firstName VARCHAR(50) NOT NULL,
     lastName VARCHAR(50) NOT NULL,
     password VARCHAR NOT NULL
@@ -34,7 +34,7 @@ CREATE TABLE friendships (
 DROP TABLE IF EXISTS savedGames CASCADE;
 CREATE TABLE savedGames(
   id SERIAL PRIMARY KEY,
-  userId INTEGER NOT NULL REFERENCES users(userId) ON DELETE CASCADE,
+  username VARCHAR REFERENCES users(username),
   -- Will not need to reference anything, just need to make sure it is a unique value.
   gameId INTEGER NOT NULL UNIQUE,
   -- shelf is for "which" shelf will be put on, whether that is played, playing, or want to play

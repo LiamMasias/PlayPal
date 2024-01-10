@@ -11,3 +11,10 @@ INSERT INTO reviews (gameId, userId, userName, rating, reviewText) VALUES
 (119133, 2, 'gamerNerd', 4, 'This game is pretty good.'),
 (119133, 3, 'lol6007', 1, 'Absolute GARBAGE!!!');
 
+INSERT INTO savedGames (userId, gameId, shelf) VALUES
+('LembaMati', 144037, 'played'),
+('LembaMati', 77336, 'wantToPlay'),
+('LembaMati', 20860, 'played'),
+('LembaMati', 6036, 'played'),
+('LembaMati', 17000, 'currentlyPlaying'),
+('LembaMati', 7346, 'currentlyPlaying');

@@ -37,6 +37,10 @@ main {
   width: fit-content;
 }
 
+.scrollspy{
+    position: fixed; /* Makes the element fixed */
+}
+
 .navigationItem{
   border-radius: 25%;
   width: 80px;

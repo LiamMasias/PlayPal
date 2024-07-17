@@ -67,6 +67,11 @@ main {
   padding: 18pt;
 }
 
+.butn{
+  color: black;
+  background-color: #add8e6;
+}
+
 .parent {
   margin: 1rem;
   padding: 2rem 2rem;

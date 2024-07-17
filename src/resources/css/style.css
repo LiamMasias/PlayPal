@@ -48,8 +48,9 @@ main {
 }
 
 .backFooter{
-  background-color: red;
-  border: deeppink;
+  box-shadow: 0 50vh 0 50vh gray;
+  background-color: gray;
+  font-weight: bolder;
   margin-top: 50px;
 }
 

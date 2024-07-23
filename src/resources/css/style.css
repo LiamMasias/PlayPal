@@ -73,6 +73,8 @@ body {
 .navButton{
   background-color: #add8e6;
   padding: 18pt;
+  margin-left: 5pt;
+  margin-right: 5pt;
 }
 
 .butn{

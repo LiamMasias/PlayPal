@@ -103,7 +103,7 @@ app.get("/discover", async (req, res) => {
     };
 
     // Make API calls for different genres
-    const [discoverResponse, indieGames, adventureGames, platformers] =
+    const [discoverResponse, indieGames, adventureGames, platformers, RPG] =
       await Promise.all([
         fetchData(
           'fields cover.url,cover.image_id, id,name,aggregated_rating,genres.name, screenshots.url, storyline ; limit 50;\nsort aggregated_rating desc;\nwhere cover.url != null & aggregated_rating != null & genres != null & screenshots!=null & storyline != null & age_ratings != null;'
@@ -117,6 +117,9 @@ app.get("/discover", async (req, res) => {
         fetchData(
           'fields cover.url,cover.image_id, id,name,aggregated_rating,genres.name, screenshots.url, storyline ; limit 50;\nsort aggregated_rating desc;\nwhere cover.url != null & aggregated_rating != null & genres.name="Platform" & screenshots!=null & storyline != null & age_ratings != null;'
         ),
+        fetchData(
+          'fields cover.url,cover.image_id, id,name,aggregated_rating,genres.name, screenshots.url, storyline ; limit 50;\nsort aggregated_rating desc;\nwhere cover.url != null & aggregated_rating != null & genres.name="Platform" & screenshots!=null & storyline != null & age_ratings != null;'
+        ),
       ]);
 
     res.status(200).render("pages/discover", {
@@ -124,6 +127,7 @@ app.get("/discover", async (req, res) => {
       indieGames: indieGames,
       adventureGames: adventureGames,
       platformers: platformers,
+      RPG: RPG,
     });
   } catch (error) {
     console.log(error);

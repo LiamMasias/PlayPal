@@ -1,0 +1,19 @@
+
+<%- include ('../partials/head') %>
+<%- include ('../partials/menu') %>
+
+<main>
+ <div class="container mt-4">
+    <h2>Find Game</h2>
+    <form action="/addReview" method="post">
+      <div class="mb-3">
+        <label for="gameId" class="form-label">Game ID:</label>
+        <input type="number" class="form-control" id="gameId" name="gameID" required placeholder="Enter Game ID">
+      </div>
+      <a href="/foundGame/" class="btn btn-primary butn" style="position: relative;">Find Game</a>
+    </form>
+  </div>
+</main>
+
+<%- include ('../partials/footer') %>
+
